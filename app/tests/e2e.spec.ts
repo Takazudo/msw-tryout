@@ -43,7 +43,7 @@ test.describe('Gallery Smoke Test', () => {
     await expect(page.locator('[data-testid="gallery-thumbnail-grid"]')).toBeVisible();
 
     // Click the first gallery item
-    const firstItem = page.locator('[data-testid="gallery-thumbnail-grid"] button').first();
+    const firstItem = page.locator('[data-testid="gallery-thumbnail-grid"] a').first();
     await firstItem.click();
 
     // Check that the dialog opens
@@ -66,13 +66,13 @@ test.describe('Gallery Smoke Test', () => {
     // Wait for gallery to load
     await expect(page.locator('[data-testid="gallery-thumbnail-grid"]')).toBeVisible();
 
-    // Check if next page button exists and is enabled
-    const nextButton = page.locator('[data-testid="pagination"] button:has-text("Next")');
-    const isNextEnabled = await nextButton.isEnabled();
+    // Check if next page link exists
+    const nextLink = page.locator('[data-testid="pagination"] a:has-text("Next")');
+    const nextLinkCount = await nextLink.count();
 
-    if (isNextEnabled) {
-      // Click next page button
-      await nextButton.click();
+    if (nextLinkCount > 0) {
+      // Click next page link
+      await nextLink.click();
 
       // Wait for URL to update
       await page.waitForURL(/\?page=2/);
@@ -84,9 +84,9 @@ test.describe('Gallery Smoke Test', () => {
       // Gallery should still be visible
       await expect(page.locator('[data-testid="gallery-thumbnail-grid"]')).toBeVisible();
 
-      // Previous button should now be visible and enabled
-      const prevButton = page.locator('[data-testid="pagination"] button:has-text("Previous")');
-      await expect(prevButton).toBeEnabled();
+      // Previous link should now be visible
+      const prevLink = page.locator('[data-testid="pagination"] a:has-text("Previous")');
+      await expect(prevLink).toBeVisible();
     }
   });
 
@@ -127,7 +127,7 @@ test.describe('Gallery Smoke Test', () => {
     await expect(page.locator('[data-testid="gallery-thumbnail-grid"]')).toBeVisible();
 
     // Click the first gallery item to open modal
-    const firstItem = page.locator('[data-testid="gallery-thumbnail-grid"] button').first();
+    const firstItem = page.locator('[data-testid="gallery-thumbnail-grid"] a').first();
     await firstItem.click();
 
     // Wait for dialog to open
