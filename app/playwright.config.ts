@@ -34,10 +34,12 @@ export default defineConfig({
   ],
 
   /* Run your local build server before starting the tests */
-  webServer: {
-    command: 'cd .. && npm run dev',
-    url: 'http://localhost:8888',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
-  },
+  webServer: process.env.CI
+    ? undefined
+    : {
+        command: 'cd .. && npm run dev',
+        url: 'http://localhost:8888',
+        reuseExistingServer: true,
+        timeout: 120 * 1000,
+      },
 });
