@@ -2,10 +2,15 @@
 
 import { PaginationInfo } from '@/lib/types';
 import { usePathname, useSearchParams } from 'next/navigation';
+import type { MouseEvent } from 'react';
 
 interface PaginationProps {
   pagination: PaginationInfo;
   onPageChange: (page: number) => void;
+}
+
+function isModifiedEvent(event: MouseEvent): boolean {
+  return !!(event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0);
 }
 
 export default function Pagination({ pagination, onPageChange }: PaginationProps) {
@@ -46,6 +51,7 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
         <a
           href={buildPageUrl(currentPage - 1)}
           onClick={(e) => {
+            if (isModifiedEvent(e)) return;
             e.preventDefault();
             onPageChange(currentPage - 1);
           }}
@@ -65,6 +71,7 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
             <a
               href={buildPageUrl(1)}
               onClick={(e) => {
+                if (isModifiedEvent(e)) return;
                 e.preventDefault();
                 onPageChange(1);
               }}
@@ -93,6 +100,7 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
               key={pageNum}
               href={buildPageUrl(pageNum)}
               onClick={(e) => {
+                if (isModifiedEvent(e)) return;
                 e.preventDefault();
                 onPageChange(pageNum);
               }}
@@ -111,6 +119,7 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
             <a
               href={buildPageUrl(totalPages)}
               onClick={(e) => {
+                if (isModifiedEvent(e)) return;
                 e.preventDefault();
                 onPageChange(totalPages);
               }}
@@ -126,6 +135,7 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
         <a
           href={buildPageUrl(currentPage + 1)}
           onClick={(e) => {
+            if (isModifiedEvent(e)) return;
             e.preventDefault();
             onPageChange(currentPage + 1);
           }}
