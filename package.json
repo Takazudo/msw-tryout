@@ -7,7 +7,7 @@
     "dev": "netlify dev",
     "build": "cd app && npm run build",
     "start": "netlify dev",
-    "kill": "lsof -ti:3000,8888,9999 | xargs kill -9 2>/dev/null || echo 'No processes found on ports 3000, 8888, 9999'",
+    "kill": "lsof -ti:3000,3200,8888,9999 | xargs kill -9 2>/dev/null || echo 'No processes found on ports 3000, 3200, 8888, 9999'",
     "prepare": "husky"
   },
   "lint-staged": {

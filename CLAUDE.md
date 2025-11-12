@@ -14,21 +14,27 @@ This is a simple MSW tryout project featuring:
 
 ### Running the Application
 
-Two terminal sessions are required:
+Three terminal sessions are recommended for full development:
 
-1. **Terminal 1 - Next.js Dev Server (Port 3000)**:
+1. **Terminal 1 - Documentation Server (Port 3000)**:
+   ```bash
+   cd doc && npm start
+   ```
+
+2. **Terminal 2 - Next.js Dev Server (Port 3200)**:
    ```bash
    cd app && npm run dev
    ```
 
-2. **Terminal 2 - Netlify Dev Server (Port 8888)**:
+3. **Terminal 3 - Netlify Dev Server (Port 8888)**:
    ```bash
    npm run dev
    ```
 
 ### Port Configuration
 
-- **Port 3000**: Next.js dev server (targetPort)
+- **Port 3000**: Docusaurus documentation server
+- **Port 3200**: Next.js dev server (targetPort)
 - **Port 8888**: Netlify Dev proxy (port)
 - **Port 9999**: Netlify Functions (functionsPort)
 
@@ -38,9 +44,9 @@ Two terminal sessions are required:
 
 ### Accessing the Application
 
-Always access via Netlify Dev proxy:
-- **Correct**: http://localhost:8888
-- **Incorrect**: http://localhost:3000 (missing Netlify Functions proxy)
+- **Documentation**: http://localhost:3000/msw-tryout/
+- **Main Application** (via Netlify Dev proxy): http://localhost:8888
+  - **Important**: Always use port 8888, not 3200 directly (missing Netlify Functions proxy)
 
 ## Project Structure
 
@@ -59,6 +65,19 @@ msw-tryout/
 │   │   ├── api.ts              # API client
 │   │   └── types.ts            # TypeScript types
 │   └── .env.local              # Environment variables
+├── doc/                         # Docusaurus documentation
+│   ├── docs/                   # Documentation markdown files
+│   │   ├── inbox/             # Development notes
+│   │   ├── data/              # Data structure docs
+│   │   ├── misc/              # Configuration docs
+│   │   └── intro.md           # Documentation home
+│   ├── static/                # Static assets
+│   │   └── api-spec/          # OpenAPI specifications
+│   │       └── msw-tryout/
+│   │           └── openapi.yaml  # API spec
+│   ├── docusaurus.config.ts   # Docusaurus config
+│   ├── sidebars.ts            # Sidebar configuration
+│   └── package.json           # Doc dependencies
 ├── netlify/
 │   └── functions/              # Netlify Functions
 │       ├── gallery.js          # GET /api/gallery (with pagination)
@@ -227,61 +246,52 @@ This project uses npm. Key commands:
 # Root level
 npm run dev          # Start Netlify Dev
 npm run build        # Build Next.js app
-npm run kill         # Kill processes on ports 3000, 8888, 9999
+npm run kill         # Kill processes on ports 3000, 3200, 8888, 9999
 
 # App level (cd app)
 npm run dev          # Start Next.js dev server
 npm run build        # Build Next.js app
 npm run start        # Start production server
+
+# Documentation (cd doc)
+npm start            # Start Docusaurus dev server (port 3000)
+npm run build        # Build documentation site
+npm run serve        # Serve built documentation
 ```
 
-## API Documentation
+## Documentation
 
-### GET /api/gallery
+### Docusaurus Documentation Site
 
-Returns paginated gallery items.
+This project includes comprehensive Docusaurus documentation located in the `/doc/` directory.
 
-**Query Parameters:**
-- `page` (number, default: 1) - Page number
-- `limit` (number, default: 30) - Items per page
-
-**Response:**
-```json
-{
-  "items": [
-    {
-      "slug": "panels-gallery-zudo-blocks-141",
-      "imageAlt": "",
-      "blurhash": "UFFNxM^d=D~9:kJ...",
-      "thumbnailUrl": "https://...",
-      "enlargedUrl": "https://..."
-    }
-  ],
-  "pagination": {
-    "currentPage": 1,
-    "totalPages": 9,
-    "totalItems": 254,
-    "itemsPerPage": 30,
-    "hasNextPage": true,
-    "hasPreviousPage": false
-  }
-}
+**Local Development:**
+```bash
+cd doc
+npm start
 ```
+Access at: http://localhost:3000/msw-tryout/
 
-### GET /api/gallery-item
+**Documentation Structure:**
+- **INBOX**: Development notes and implementation guides
+- **Data**: Data structures and business logic documentation
+- **Misc**: Configuration, setup, and style rules
+- **API Reference**: OpenAPI/Swagger specification
 
-Returns a single gallery item by slug.
+**Key Documentation Files:**
+- `/doc/static/api-spec/msw-tryout/openapi.yaml` - Complete API specification
+- `/doc/docs/misc/doc-style-rule.md` - Documentation style guidelines
+- `/doc/docs/intro.md` - Documentation homepage
 
-**Query Parameters:**
-- `slug` (string, required) - Item slug
+### API Documentation
 
-**Response:**
-```json
-{
-  "slug": "panels-gallery-zudo-blocks-141",
-  "imageAlt": "",
-  "blurhash": "UFFNxM^d=D~9:kJ...",
-  "thumbnailUrl": "https://...",
-  "enlargedUrl": "https://..."
-}
-```
+For complete API documentation including request/response formats, error codes, and usage examples, see:
+
+**📚 [API Reference Documentation](http://localhost:3000/msw-tryout/api/msw-tryout)** (when running `cd doc && npm start`)
+
+Or view the OpenAPI specification directly:
+- File: `/doc/static/api-spec/msw-tryout/openapi.yaml`
+
+**Quick API Overview:**
+- `GET /api/gallery` - List gallery items with pagination
+- `GET /api/gallery-item?slug={slug}` - Get single gallery item by slug
