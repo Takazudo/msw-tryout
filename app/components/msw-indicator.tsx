@@ -4,12 +4,18 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 export function MSWIndicator() {
-  const [mswEnabled, setMswEnabled] = useState(false);
-  const [scenario, setScenario] = useState('default');
-  const [mounted, setMounted] = useState(false);
+  const [mswEnabled, setMswEnabled] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const localStorageEnabled = localStorage.getItem('msw_enabled') === 'true';
+    const envEnabled = process.env.NEXT_PUBLIC_ENABLE_MSW === 'true';
+    return localStorageEnabled || envEnabled;
+  });
+  const [scenario, setScenario] = useState(() => {
+    if (typeof window === 'undefined') return 'default';
+    return localStorage.getItem('msw_scenario') || 'default';
+  });
 
   useEffect(() => {
-    setMounted(true);
     const checkMSW = () => {
       const localStorageEnabled = localStorage.getItem('msw_enabled') === 'true';
       const envEnabled = process.env.NEXT_PUBLIC_ENABLE_MSW === 'true';
@@ -20,14 +26,12 @@ export function MSWIndicator() {
       setScenario(currentScenario);
     };
 
-    checkMSW();
-
     // Listen for storage changes (in case admin page is open in another tab)
     window.addEventListener('storage', checkMSW);
     return () => window.removeEventListener('storage', checkMSW);
   }, []);
 
-  if (!mounted || !mswEnabled) {
+  if (!mswEnabled) {
     return null;
   }
 

@@ -9,11 +9,7 @@ import {
 } from './data';
 
 // Helper function to paginate items
-const paginateItems = (
-  items: GalleryItem[],
-  page: number,
-  limit: number,
-): GalleryResponse => {
+const paginateItems = (items: GalleryItem[], page: number, limit: number): GalleryResponse => {
   const startIndex = (page - 1) * limit;
   const endIndex = startIndex + limit;
   const paginatedItems = items.slice(startIndex, endIndex);

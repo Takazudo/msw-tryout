@@ -1,5 +1,6 @@
 'use client';
 
+import type React from 'react';
 import { useEffect, useState } from 'react';
 
 export function MSWProvider({ children }: { children: React.ReactNode }) {
@@ -22,8 +23,10 @@ export function MSWProvider({ children }: { children: React.ReactNode }) {
             onUnhandledRequest: 'bypass',
           });
           const scenario = localStorage.getItem('msw_scenario') || 'default';
-          console.log('[MSW] Mocking enabled');
-          console.log('[MSW] Current scenario:', scenario);
+          // eslint-disable-next-line no-console
+          console.info('[MSW] Mocking enabled');
+          // eslint-disable-next-line no-console
+          console.info('[MSW] Current scenario:', scenario);
         } catch (error) {
           console.error('[MSW] Failed to initialize:', error);
         }

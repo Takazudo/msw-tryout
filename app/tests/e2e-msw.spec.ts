@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Gallery with MSW - Empty Results', () => {
-  test.beforeEach(async ({ page, context }) => {
+  test.beforeEach(async ({ context }) => {
     // Enable MSW and set scenario to 'empty' via localStorage
     await context.addInitScript(() => {
       localStorage.setItem('msw_enabled', 'true');
