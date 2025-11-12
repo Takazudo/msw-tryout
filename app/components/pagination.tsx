@@ -86,9 +86,7 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
             >
               1
             </a>
-            {currentPage > 4 && (
-              <span className="px-hgap-xs py-vgap-xs text-zd-gray">...</span>
-            )}
+            {currentPage > 4 && <span className="px-hgap-xs py-vgap-xs text-zd-gray">...</span>}
           </>
         )}
 
