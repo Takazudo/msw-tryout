@@ -1,6 +1,6 @@
 [build]
-  # Build command for the project
-  command = "cd app && npm run build"
+  # Build command for the project - install dependencies first, then build
+  command = "cd app && npm install && npm run build"
   # Directory with serverless functions (JavaScript files)
   functions = "netlify/functions"
   # Directory to publish - Next.js build output
