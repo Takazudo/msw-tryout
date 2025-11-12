@@ -60,7 +60,11 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
           Previous
         </a>
       ) : (
-        <span className="px-hgap-sm py-vgap-xs rounded-sm bg-zd-gray2 text-zd-white opacity-50 cursor-not-allowed border border-zd-white">
+        <span
+          role="button"
+          aria-disabled="true"
+          className="px-hgap-sm py-vgap-xs rounded-sm bg-zd-gray2 text-zd-white opacity-50 cursor-not-allowed border border-zd-white"
+        >
           Previous
         </span>
       )}
@@ -144,7 +148,11 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
           Next
         </a>
       ) : (
-        <span className="px-hgap-sm py-vgap-xs rounded-sm bg-zd-gray2 text-zd-white opacity-50 cursor-not-allowed border border-zd-white">
+        <span
+          role="button"
+          aria-disabled="true"
+          className="px-hgap-sm py-vgap-xs rounded-sm bg-zd-gray2 text-zd-white opacity-50 cursor-not-allowed border border-zd-white"
+        >
           Next
         </span>
       )}
