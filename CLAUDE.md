@@ -103,6 +103,16 @@ Component exports should still use PascalCase:
 export default function GalleryDialog() { ... }
 ```
 
+### Zudo Design System
+
+**📚 CRITICAL: When working with HTML/CSS, ALWAYS read the design system documentation first.**
+
+**Design System Documentation:**
+- **File**: `/doc/docs/inbox/design-system.md`
+- **Local URL**: http://localhost:3000/msw-tryout/inbox/design-system (when running `cd doc && npm start`)
+
+This project uses the Zudo Design System with custom spacing tokens (hgap/vgap) and color tokens (zd-*). All Tailwind defaults are disabled. Refer to the documentation above for complete guidelines.
+
 ## Security & Safety Guidelines
 
 ### Command Restrictions
