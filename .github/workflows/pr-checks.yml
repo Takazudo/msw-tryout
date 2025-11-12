@@ -93,10 +93,12 @@ jobs:
 
       - name: Start Netlify dev server
         run: |
-          # Create .netlify directory to avoid project detection issues
-          mkdir -p .netlify
-          echo '{}' > .netlify/state.json
+          # Temporarily hide doc/package.json to avoid multi-project detection
+          mv doc/package.json doc/package.json.bak
           pnpm exec netlify dev --offline &
+          # Restore after starting
+          sleep 2
+          mv doc/package.json.bak doc/package.json
 
       - name: Wait for servers to be ready
         run: |
