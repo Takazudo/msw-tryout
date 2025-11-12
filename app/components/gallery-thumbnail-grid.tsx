@@ -11,6 +11,7 @@ interface GalleryThumbnailGridProps {
 
 interface GalleryThumbnailButtonProps {
   item: GalleryItem;
+  href: string;
   isLoaded: boolean;
   isErrored: boolean;
   onActivate: (slug: string) => void;
@@ -22,6 +23,7 @@ interface GalleryThumbnailButtonProps {
 
 function GalleryThumbnailButton({
   item,
+  href,
   isLoaded,
   isErrored,
   onActivate,
@@ -47,11 +49,14 @@ function GalleryThumbnailButton({
 
   return (
     <li className="relative" role="listitem">
-      <button
-        type="button"
+      <a
+        href={href}
         data-testid="gallery-thumbnail"
         data-slug={item.slug}
-        onClick={() => onActivate(item.slug)}
+        onClick={(e) => {
+          e.preventDefault();
+          onActivate(item.slug);
+        }}
         className="group relative block aspect-square w-full overflow-hidden bg-zd-black transition-transform hover:ring-3 hover:ring-zd-strong hover:z-10 focus:outline-none focus:ring-2 focus:ring-zd-white focus:ring-offset-2 focus:ring-offset-zd-black focus:z-10"
         aria-haspopup="dialog"
         aria-label={item.imageAlt || `Open gallery image ${item.slug}`}
@@ -85,7 +90,7 @@ function GalleryThumbnailButton({
             Image failed to load
           </span>
         )}
-      </button>
+      </a>
     </li>
   );
 }
@@ -98,13 +103,20 @@ export default function GalleryThumbnailGrid({ items }: GalleryThumbnailGridProp
   const observerRef = useRef<IntersectionObserver | null>(null);
   const pendingImagesRef = useRef(new Set<HTMLImageElement>());
 
-  const handleThumbnailClick = useCallback(
+  const buildThumbnailUrl = useCallback(
     (slug: string) => {
       const params = new URLSearchParams(searchParams.toString());
       params.set('id', slug);
-      router.push(`/?${params.toString()}`, { scroll: false });
+      return `/?${params.toString()}`;
     },
-    [router, searchParams],
+    [searchParams],
+  );
+
+  const handleThumbnailClick = useCallback(
+    (slug: string) => {
+      router.push(buildThumbnailUrl(slug), { scroll: false });
+    },
+    [router, buildThumbnailUrl],
   );
 
   const handleImageLoad = useCallback((image: HTMLImageElement, src: string) => {
@@ -223,6 +235,7 @@ export default function GalleryThumbnailGrid({ items }: GalleryThumbnailGridProp
           <GalleryThumbnailButton
             key={item.slug}
             item={item}
+            href={buildThumbnailUrl(item.slug)}
             isLoaded={loadedImages.has(item.thumbnailUrl)}
             isErrored={erroredImages.has(item.thumbnailUrl)}
             onActivate={handleThumbnailClick}
