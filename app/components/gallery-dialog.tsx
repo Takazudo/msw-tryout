@@ -161,12 +161,12 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
       ref={dialogRef}
       data-testid="gallery-dialog"
       id="gallery-dialog"
-      className="fixed inset-0 z-[60] m-0 max-h-screen h-screen max-w-screen w-screen bg-transparent p-0 backdrop:bg-zd-black/70"
+      className="fixed inset-0 z-[60] m-0 max-h-screen h-screen max-w-screen w-screen bg-zd-black p-0 backdrop:bg-zd-black/70"
       onClick={handleDialogClick}
       aria-labelledby={dialogTitleId}
       aria-describedby={dialogDescriptionId}
     >
-      <div className="relative flex h-full w-full items-center justify-center">
+      <div className="relative flex flex-col lg:flex-row h-full w-full">
         {/* Close button */}
         <button
           data-testid="gallery-dialog-close"
@@ -208,8 +208,8 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
           Use the arrow keys to move through images. Press Escape to close.
         </p>
 
-        {/* Image container */}
-        <div className="relative flex h-full w-full items-center justify-center">
+        {/* Image container - top on portrait, left on landscape */}
+        <div className="flex-1 flex items-center justify-center bg-zd-black p-hgap-md">
           <div className="relative flex h-full w-full items-center justify-center">
             {isLoading && (
               <div className="absolute inset-0 flex items-center justify-center z-20">
@@ -221,7 +221,7 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
               ref={imageRef}
               src={currentItem.enlargedUrl}
               alt={currentItem.imageAlt || `Gallery image ${currentItem.slug}`}
-              className="relative max-h-[95vh] max-w-[calc(100vw-200px)] object-contain transition-opacity duration-300 border border-zd-white"
+              className="relative max-h-full max-w-full object-contain transition-opacity duration-300"
               onLoad={() => {
                 setImageLoaded(true);
                 setImageError(false);
@@ -237,16 +237,69 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
               }}
               aria-busy={!imageLoaded && !imageError}
             />
+
+            {imageError && (
+              <div
+                role="alert"
+                className="absolute inset-0 flex items-center justify-center bg-zd-black/80 px-hgap-sm text-center text-sm text-zd-gray"
+              >
+                Unable to load this image. Please try another item.
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Metadata sidebar - bottom on portrait, right on landscape */}
+        <div className="w-full lg:w-[400px] bg-zd-black border-t lg:border-t-0 lg:border-l border-zd-gray/20 flex flex-col max-h-[40vh] lg:max-h-none">
+          {/* User info header */}
+          <div className="p-hgap-md border-b border-zd-gray/20">
+            <div className="flex items-center gap-hgap-sm">
+              <div className="w-[32px] h-[32px] rounded-full bg-zd-gray/30 flex items-center justify-center text-white font-bold text-sm">
+                {currentItem.user.charAt(0)}
+              </div>
+              <span className="text-white font-semibold">{currentItem.user}</span>
+            </div>
           </div>
 
-          {imageError && (
-            <div
-              role="alert"
-              className="absolute inset-0 flex items-center justify-center bg-zd-black/80 px-hgap-sm text-center text-sm text-zd-gray"
-            >
-              Unable to load this image. Please try another item.
+          {/* Scrollable content area */}
+          <div className="flex-1 overflow-y-auto p-hgap-md">
+            {/* Description */}
+            <div className="mb-vgap-md">
+              <div className="flex gap-hgap-sm">
+                <div className="w-[32px] h-[32px] rounded-full bg-zd-gray/30 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                  {currentItem.user.charAt(0)}
+                </div>
+                <div className="flex-1">
+                  <p className="text-white">
+                    <span className="font-semibold mr-hgap-xs">{currentItem.user}</span>
+                    {currentItem.description}
+                  </p>
+                </div>
+              </div>
             </div>
-          )}
+
+            {/* Hashtags */}
+            {currentItem.hashtags && currentItem.hashtags.length > 0 && (
+              <div className="mb-vgap-md">
+                <div className="flex flex-wrap gap-hgap-xs">
+                  {currentItem.hashtags.map((tag, index) => (
+                    <span key={index} className="text-zd-blue text-sm">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Timestamp */}
+            <div className="text-zd-gray text-xs">
+              {new Date(currentItem.created_at).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </dialog>
