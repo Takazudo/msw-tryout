@@ -47,16 +47,16 @@ test.describe('Gallery Smoke Test', () => {
     await firstItem.click();
 
     // Check that the dialog opens
-    await expect(page.locator('[role="dialog"]')).toBeVisible();
+    await expect(page.locator('[data-testid="gallery-dialog"]')).toBeVisible();
 
     // Check that the enlarged image is visible
-    await expect(page.locator('[role="dialog"] img')).toBeVisible();
+    await expect(page.locator('[data-testid="gallery-dialog"] img')).toBeVisible();
 
     // Close the dialog (click backdrop or close button if available)
     await page.keyboard.press('Escape');
 
     // Verify dialog is closed
-    await expect(page.locator('[role="dialog"]')).not.toBeVisible();
+    await expect(page.locator('[data-testid="gallery-dialog"]')).not.toBeVisible();
   });
 
   test('should navigate between pages', async ({ page }) => {
@@ -131,7 +131,7 @@ test.describe('Gallery Smoke Test', () => {
     await firstItem.click();
 
     // Wait for dialog to open
-    await expect(page.locator('[role="dialog"]')).toBeVisible();
+    await expect(page.locator('[data-testid="gallery-dialog"]')).toBeVisible();
 
     // Get the URL which should include the id
     const url = page.url();
@@ -141,9 +141,9 @@ test.describe('Gallery Smoke Test', () => {
     await page.reload();
 
     // Dialog should open automatically with the slug in URL
-    await expect(page.locator('[role="dialog"]')).toBeVisible();
+    await expect(page.locator('[data-testid="gallery-dialog"]')).toBeVisible();
 
     // The enlarged image should be visible
-    await expect(page.locator('[role="dialog"] img')).toBeVisible();
+    await expect(page.locator('[data-testid="gallery-dialog"] img')).toBeVisible();
   });
 });
