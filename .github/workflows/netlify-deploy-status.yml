@@ -1,0 +1,168 @@
+name: Netlify Deploy Status
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  # Triggered by deployment_status from Netlify
+  deployment_status:
+
+permissions:
+  contents: read
+  pull-requests: write
+  deployments: read
+
+jobs:
+  post-deploy-status:
+    # Only run for Netlify deployments
+    if: |
+      github.event_name == 'deployment_status' &&
+      github.event.deployment_status.environment == 'netlify'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Get deployment info
+        id: deploy-info
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          DEPLOY_ID: ${{ github.event.deployment_status.id }}
+          DEPLOY_STATE: ${{ github.event.deployment_status.state }}
+          DEPLOY_URL: ${{ github.event.deployment_status.target_url }}
+        run: |
+          echo "deploy_id=$DEPLOY_ID" >> $GITHUB_OUTPUT
+          echo "deploy_state=$DEPLOY_STATE" >> $GITHUB_OUTPUT
+          echo "deploy_url=$DEPLOY_URL" >> $GITHUB_OUTPUT
+
+          # Fetch deploy details from Netlify API
+          DEPLOY_DETAILS=$(curl -s -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
+            "https://api.netlify.com/api/v1/deploys/$DEPLOY_ID")
+
+          COMMIT_REF=$(echo "$DEPLOY_DETAILS" | jq -r '.commit_ref // "N/A"')
+          CREATED_AT=$(echo "$DEPLOY_DETAILS" | jq -r '.created_at // "N/A"')
+
+          echo "commit_ref=$COMMIT_REF" >> $GITHUB_OUTPUT
+          echo "created_at=$CREATED_AT" >> $GITHUB_OUTPUT
+
+      - name: Fetch deploy logs on failure
+        if: github.event.deployment_status.state == 'failure' || github.event.deployment_status.state == 'error'
+        id: fetch-logs
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          DEPLOY_ID: ${{ steps.deploy-info.outputs.deploy_id }}
+        run: |
+          # Fetch logs from Netlify API
+          LOG_RESPONSE=$(curl -s -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
+            "https://api.netlify.com/api/v1/deploys/$DEPLOY_ID/log")
+
+          # Save logs to file
+          echo "$LOG_RESPONSE" > deploy-log.txt
+
+          # Check if logs are available
+          if [ "$LOG_RESPONSE" == "null" ] || [ -z "$LOG_RESPONSE" ]; then
+            echo "logs_available=false" >> $GITHUB_OUTPUT
+          else
+            echo "logs_available=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Find PR number
+        id: find-pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const commit = '${{ steps.deploy-info.outputs.commit_ref }}';
+
+            // Search for PR associated with this commit
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open'
+            });
+
+            for (const pr of prs) {
+              if (pr.head.sha === commit) {
+                return pr.number;
+              }
+            }
+
+            return null;
+
+      - name: Post success status to PR
+        if: |
+          github.event.deployment_status.state == 'success' &&
+          steps.find-pr.outputs.result != 'null'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = ${{ steps.find-pr.outputs.result }};
+            const deployUrl = '${{ steps.deploy-info.outputs.deploy_url }}';
+            const commitRef = '${{ steps.deploy-info.outputs.commit_ref }}';
+
+            const body = `🤖 Post by Claude Code
+
+---
+
+## ✅ Netlify Deploy Succeeded
+
+**Deploy URL**: ${deployUrl}
+**Commit**: \`${commitRef.substring(0, 7)}\`
+**Status**: Ready
+
+Your preview is now available!`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: body
+            });
+
+      - name: Post failure status to PR
+        if: |
+          (github.event.deployment_status.state == 'failure' || github.event.deployment_status.state == 'error') &&
+          steps.find-pr.outputs.result != 'null'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const prNumber = ${{ steps.find-pr.outputs.result }};
+            const deployUrl = '${{ steps.deploy-info.outputs.deploy_url }}';
+            const commitRef = '${{ steps.deploy-info.outputs.commit_ref }}';
+            const logsAvailable = '${{ steps.fetch-logs.outputs.logs_available }}' === 'true';
+
+            let logSection = '';
+            if (logsAvailable) {
+              const logs = fs.readFileSync('deploy-log.txt', 'utf8');
+              // Truncate logs if too long (GitHub comment limit is ~65k chars)
+              const truncatedLogs = logs.length > 60000 ? logs.substring(0, 60000) + '\n\n... (truncated)' : logs;
+              logSection = `\n\n<details>\n<summary>📜 Deploy Logs</summary>\n\n\`\`\`\n${truncatedLogs}\n\`\`\`\n</details>`;
+            } else {
+              logSection = '\n\n⚠️ Deploy logs are not available for this deployment.';
+            }
+
+            const body = `🤖 Post by Claude Code
+
+---
+
+## ❌ Netlify Deploy Failed
+
+**Deploy URL**: ${deployUrl}
+**Commit**: \`${commitRef.substring(0, 7)}\`
+**Status**: Failed${logSection}
+
+Please check the logs above for error details.`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: body
+            });
