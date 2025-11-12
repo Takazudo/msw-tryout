@@ -167,7 +167,7 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
         <button
           data-testid="gallery-dialog-close"
           onClick={handleClose}
-          className="fixed top-hgap-sm right-hgap-sm z-[100] p-vgap-xs text-zd-white hover:text-zd-gray transition-colors"
+          className="fixed top-hgap-sm right-hgap-sm z-[100] p-vgap-xs text-white hover:text-zd-gray transition-colors bg-zd-black/50 rounded-sm backdrop-blur"
           aria-label="Close dialog"
         >
           <CloseIcon className="w-6 h-6" />
@@ -178,7 +178,7 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
           <button
             data-testid="gallery-dialog-prev"
             onClick={handlePrevious}
-            className="fixed left-hgap-xs top-[50vh] z-[100] -translate-y-1/2 rounded-full text-zd-white backdrop-blur transition-colors hover:bg-zd-white/20 p-hgap-xs"
+            className="fixed left-hgap-xs top-[50vh] z-[100] -translate-y-1/2 rounded-full text-white backdrop-blur transition-colors hover:bg-zd-white/20 bg-zd-black/50 p-hgap-xs"
             aria-label="Previous image"
           >
             <ChevronLeftIcon className="h-[50px] w-[50px]" />
@@ -189,10 +189,10 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
           <button
             data-testid="gallery-dialog-next"
             onClick={handleNext}
-            className="fixed right-hgap-xs top-[50vh] z-[100] -translate-y-1/2 rounded-full text-zd-white backdrop-blur transition-colors hover:bg-zd-white/20 p-hgap-xs"
+            className="fixed right-hgap-xs top-[50vh] z-[100] -translate-y-1/2 rounded-full text-white backdrop-blur transition-colors hover:bg-zd-white/20 bg-zd-black/50 p-hgap-xs"
             aria-label="Next image"
           >
-            <ChevronRightIcon className="h-10 w-10" />
+            <ChevronRightIcon className="h-[50px] w-[50px]" />
           </button>
         )}
 
