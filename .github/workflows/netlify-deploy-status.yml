@@ -34,17 +34,43 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          DEPLOY_ID: ${{ github.event.deployment_status.id }}
           DEPLOY_STATE: ${{ github.event.deployment_status.state }}
           DEPLOY_URL: ${{ github.event.deployment_status.target_url }}
         run: |
-          echo "deploy_id=$DEPLOY_ID" >> $GITHUB_OUTPUT
           echo "deploy_state=$DEPLOY_STATE" >> $GITHUB_OUTPUT
           echo "deploy_url=$DEPLOY_URL" >> $GITHUB_OUTPUT
 
-          # Fetch deploy details from Netlify API
+          # Extract Netlify deploy ID from the target URL
+          # Netlify URLs follow pattern: https://[deploy-id]--[site-name].netlify.app
+          # or https://deploy-preview-[pr]--[site-name].netlify.app (which redirects)
+          NETLIFY_DEPLOY_ID=""
+
+          # Try to extract from URL first (e.g., 507f1f77bcf86cd799439011--site.netlify.app)
+          if [[ "$DEPLOY_URL" =~ https://([a-f0-9]{24})-- ]]; then
+            NETLIFY_DEPLOY_ID="${BASH_REMATCH[1]}"
+            echo "Found Netlify deploy ID from URL: $NETLIFY_DEPLOY_ID"
+          else
+            # If not in URL format, query Netlify API for recent deploys and match by URL
+            echo "Deploy ID not in URL, querying Netlify API..."
+            RECENT_DEPLOYS=$(curl -s -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
+              "https://api.netlify.com/api/v1/sites/$NETLIFY_SITE_ID/deploys?per_page=10")
+
+            # Find deploy matching the target URL
+            NETLIFY_DEPLOY_ID=$(echo "$RECENT_DEPLOYS" | jq -r --arg url "$DEPLOY_URL" \
+              '.[] | select(.deploy_ssl_url == $url or .ssl_url == $url) | .id' | head -1)
+
+            if [ -z "$NETLIFY_DEPLOY_ID" ] || [ "$NETLIFY_DEPLOY_ID" == "null" ]; then
+              echo "❌ Error: Could not find Netlify deploy ID"
+              exit 1
+            fi
+            echo "Found Netlify deploy ID from API: $NETLIFY_DEPLOY_ID"
+          fi
+
+          echo "deploy_id=$NETLIFY_DEPLOY_ID" >> $GITHUB_OUTPUT
+
+          # Fetch full deploy details from Netlify API using the real Netlify deploy ID
           DEPLOY_DETAILS=$(curl -s -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
-            "https://api.netlify.com/api/v1/deploys/$DEPLOY_ID")
+            "https://api.netlify.com/api/v1/deploys/$NETLIFY_DEPLOY_ID")
 
           COMMIT_REF=$(echo "$DEPLOY_DETAILS" | jq -r '.commit_ref // "N/A"')
           CREATED_AT=$(echo "$DEPLOY_DETAILS" | jq -r '.created_at // "N/A"')
