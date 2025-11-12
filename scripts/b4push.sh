@@ -6,22 +6,25 @@ echo "🔧 Running complete pre-push checks"
 echo "======================================"
 echo
 
+# Change to app directory for all subsequent commands
+cd app
+
 # Step 1: Run code quality checks
 echo "✨ Running code quality checks..."
-cd app && npm run check
+npm run check
 echo "✅ Code quality checks passed"
 echo
 
 # Step 2: Build the project
 echo "🔨 Building project..."
-cd app && npm run build
+npm run build
 echo "✅ Project built successfully"
 echo
 
 # Step 3: Run smoke tests with Netlify Dev
 echo "🎭 Running smoke tests..."
 echo
-cd app && npm run test:smoke
+npm run test:smoke
 
 TEST_EXIT=$?
 

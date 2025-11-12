@@ -61,7 +61,6 @@ export default [
       '@typescript-eslint/no-unused-vars': 'error',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@next/next/no-img-element': 'off',
-      'react-hooks/set-state-in-effect': 'warn', // Allow setState in effects with warning
       ...eslintConfigPrettier.rules,
     },
   },

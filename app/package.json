@@ -20,20 +20,7 @@
     "test:smoke": "playwright test tests/e2e.spec.ts",
     "b4push": "../scripts/b4push-quick.sh",
     "b4push:full": "../scripts/b4push.sh",
-    "b4push:quick": "../scripts/b4push-quick.sh",
-    "prepare": "husky"
-  },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{js,jsx}": [
-      "prettier --write"
-    ],
-    "*.{json,css}": [
-      "prettier --write"
-    ]
+    "b4push:quick": "../scripts/b4push-quick.sh"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.1",

@@ -6,15 +6,18 @@ echo "⚡ Running quick pre-push checks"
 echo "======================================"
 echo
 
+# Change to app directory for all subsequent commands
+cd app
+
 # Step 1: Run code quality checks
 echo "✨ Running code quality checks..."
-cd app && npm run check
+npm run check
 echo "✅ Code quality checks passed"
 echo
 
 # Step 2: Build check
 echo "🔨 Testing build..."
-cd app && npm run build
+npm run build
 echo "✅ Build succeeded"
 echo
 
