@@ -152,10 +152,6 @@ const config: Config = {
       theme: prismThemes.github,
       darkTheme: prismThemes.oneDark,
     },
-    // Code block settings
-    codeblock: {
-      showLineNumbers: true,
-    },
   } satisfies Preset.ThemeConfig,
 };
 

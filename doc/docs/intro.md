@@ -42,7 +42,7 @@ Two terminal sessions are required:
 
 Always access via Netlify Dev proxy:
 - **Correct**: http://localhost:8888
-- **Incorrect**: http://localhost:3000 (missing Netlify Functions proxy)
+- **Incorrect**: http://localhost:3200 (missing Netlify Functions proxy)
 
 ## Documentation Structure
 
