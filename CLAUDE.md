@@ -18,17 +18,17 @@ Three terminal sessions are recommended for full development:
 
 1. **Terminal 1 - Documentation Server (Port 3000)**:
    ```bash
-   cd doc && npm start
+   cd doc && pnpm start
    ```
 
 2. **Terminal 2 - Next.js Dev Server (Port 3200)**:
    ```bash
-   cd app && npm run dev
+   cd app && pnpm run dev
    ```
 
 3. **Terminal 3 - Netlify Dev Server (Port 8888)**:
    ```bash
-   npm run dev
+   pnpm run dev
    ```
 
 ### Port Configuration
@@ -198,24 +198,6 @@ Use the `gh` command to interact with GitHub:
 - **PR comments**: `gh api repos/{owner}/{repo}/pulls/{number}/comments`
 - **General API**: `gh api <endpoint>`
 
-## Git Worktree
-
-The `worktrees/` directory contains git worktree directories. Each worktree may have a different branch checked out.
-
-⚠️ **Critical Notes**:
-
-- Each worktree is an independent working directory with its own branch
-- Git commands in a worktree affect only that specific worktree
-- **Always verify which worktree and branch you're in** before git operations
-- Confusion between worktrees can lead to changes on the wrong branch
-
-**Best Practices**:
-
-1. Always check current branch: `git branch --show-current`
-2. Verify correct worktree before making changes
-3. Avoid destructive git operations without confirmation
-4. Be aware of worktree context when referencing files
-
 ## Developer Notes
 
 ### Documentation Inbox
@@ -251,24 +233,33 @@ When given a production URL, check corresponding local files:
 
 ## Package Management
 
-This project uses npm. Key commands:
+This project uses **pnpm** (version 10.21.0) with workspace support. Key commands:
 
 ```bash
 # Root level
-npm run dev          # Start Netlify Dev
-npm run build        # Build Next.js app
-npm run kill         # Kill processes on ports 3000, 3200, 8888, 9999
+pnpm run dev          # Start Netlify Dev
+pnpm run build        # Build Next.js app
+pnpm run kill         # Kill processes on ports 3000, 3200, 8888, 9999
 
 # App level (cd app)
-npm run dev          # Start Next.js dev server
-npm run build        # Build Next.js app
-npm run start        # Start production server
+pnpm run dev          # Start Next.js dev server
+pnpm run build        # Build Next.js app
+pnpm run start        # Start production server
 
 # Documentation (cd doc)
-npm start            # Start Docusaurus dev server (port 3000)
-npm run build        # Build documentation site
-npm run serve        # Serve built documentation
+pnpm start            # Start Docusaurus dev server (port 3000)
+pnpm run build        # Build documentation site
+pnpm run serve        # Serve built documentation
+
+# Workspace commands (from root)
+pnpm install          # Install all dependencies for all workspaces
+pnpm -r <command>     # Run command in all workspaces
 ```
+
+**Workspace Configuration:**
+- The project uses pnpm workspaces defined in `pnpm-workspace.yaml`
+- Workspaces: `app` and `doc`
+- Each workspace has its own `package.json` with `packageManager: "pnpm@10.21.0"`
 
 ## Documentation
 

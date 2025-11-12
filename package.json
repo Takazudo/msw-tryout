@@ -5,26 +5,27 @@
   "private": true,
   "scripts": {
     "dev": "netlify dev",
-    "build": "cd app && npm run build",
+    "build": "cd app && pnpm run build",
     "start": "netlify dev",
     "kill": "lsof -ti:3000,3200,8888,9999 | xargs kill -9 2>/dev/null || echo 'No processes found on ports 3000, 3200, 8888, 9999'",
     "prepare": "husky"
   },
   "lint-staged": {
     "app/**/*.{ts,tsx}": [
-      "bash -c 'cd app && npx eslint --fix \"${0#app/}\"'",
-      "bash -c 'cd app && npx prettier --write \"${0#app/}\"'"
+      "bash -c 'cd app && pnpm exec eslint --fix \"${0#app/}\"'",
+      "bash -c 'cd app && pnpm exec prettier --write \"${0#app/}\"'"
     ],
     "app/**/*.{js,jsx,json,css}": [
-      "bash -c 'cd app && npx prettier --write \"${0#app/}\"'"
+      "bash -c 'cd app && pnpm exec prettier --write \"${0#app/}\"'"
     ],
     "netlify/functions/**/*.js": [
-      "npx prettier --write"
+      "pnpm exec prettier --write"
     ]
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "packageManager": "pnpm@10.21.0",
   "devDependencies": {
     "husky": "^9.1.7",
     "lint-staged": "^16.2.6",

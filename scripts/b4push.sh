@@ -11,20 +11,20 @@ cd app
 
 # Step 1: Run code quality checks
 echo "✨ Running code quality checks..."
-npm run check
+pnpm run check
 echo "✅ Code quality checks passed"
 echo
 
 # Step 2: Build the project
 echo "🔨 Building project..."
-npm run build
+pnpm run build
 echo "✅ Project built successfully"
 echo
 
 # Step 3: Run smoke tests with Netlify Dev
 echo "🎭 Running smoke tests..."
 echo
-npm run test:smoke
+pnpm run test:smoke
 
 TEST_EXIT=$?
 
