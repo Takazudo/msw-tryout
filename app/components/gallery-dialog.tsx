@@ -167,7 +167,7 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
         <button
           data-testid="gallery-dialog-close"
           onClick={handleClose}
-          className="fixed top-4 right-4 z-[100] p-2 text-white hover:text-gray-300 transition-colors"
+          className="fixed top-hgap-sm right-hgap-sm z-[100] p-vgap-xs text-zd-white hover:text-zd-gray transition-colors"
           aria-label="Close dialog"
         >
           <CloseIcon className="w-6 h-6" />
@@ -178,7 +178,7 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
           <button
             data-testid="gallery-dialog-prev"
             onClick={handlePrevious}
-            className="fixed left-[10px] top-[50vh] z-[100] -translate-y-1/2 rounded-full text-white backdrop-blur transition-colors hover:bg-white/20 p-[10px]"
+            className="fixed left-hgap-xs top-[50vh] z-[100] -translate-y-1/2 rounded-full text-zd-white backdrop-blur transition-colors hover:bg-zd-white/20 p-hgap-xs"
             aria-label="Previous image"
           >
             <ChevronLeftIcon className="h-[50px] w-[50px]" />
@@ -189,7 +189,7 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
           <button
             data-testid="gallery-dialog-next"
             onClick={handleNext}
-            className="fixed right-[10px] top-[50vh] z-[100] -translate-y-1/2 rounded-full text-white backdrop-blur transition-colors hover:bg-white/20 p-[10px]"
+            className="fixed right-hgap-xs top-[50vh] z-[100] -translate-y-1/2 rounded-full text-zd-white backdrop-blur transition-colors hover:bg-zd-white/20 p-hgap-xs"
             aria-label="Next image"
           >
             <ChevronRightIcon className="h-10 w-10" />
@@ -238,7 +238,7 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
           {imageError && (
             <div
               role="alert"
-              className="absolute inset-0 flex items-center justify-center bg-black/80 px-4 text-center text-sm text-gray-200"
+              className="absolute inset-0 flex items-center justify-center bg-zd-black/80 px-hgap-sm text-center text-sm text-zd-gray"
             >
               Unable to load this image. Please try another item.
             </div>
