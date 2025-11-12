@@ -6,9 +6,9 @@ import { defineConfig, devices } from '@playwright/test';
  * IMPORTANT: Tests should run against production build, not dev server!
  *
  * Setup:
- * 1. Build: npm run build (creates static export in out/ directory)
- * 2. Serve: npm run serve (serves out/ on port 3200)
- * 3. Netlify: npm run dev (Netlify Dev on port 8888, proxies to 3200)
+ * 1. Build: pnpm run build (creates static export in out/ directory)
+ * 2. Serve: pnpm run serve (serves out/ on port 3200)
+ * 3. Netlify: pnpm run dev:api (Netlify Dev on port 8888, proxies to 3200)
  * 4. Test: Tests access via http://localhost:8888
  *
  * This ensures tests validate the actual production build that will be deployed.
@@ -49,7 +49,7 @@ export default defineConfig({
   webServer: process.env.CI
     ? undefined
     : {
-        command: 'cd .. && npm run dev',
+        command: 'cd .. && pnpm run dev:api',
         url: 'http://localhost:8888',
         reuseExistingServer: true,
         timeout: 120 * 1000,
