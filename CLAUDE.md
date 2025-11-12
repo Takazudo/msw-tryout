@@ -109,7 +109,8 @@ export default function GalleryDialog() { ... }
 
 **Design System Documentation:**
 - **File**: `/doc/docs/inbox/design-system.md`
-- **Local URL**: http://localhost:3000/msw-tryout/inbox/design-system (when running `cd doc && npm start`)
+- **GitHub Pages**: https://takazudo.github.io/msw-tryout/docs/inbox/design-system
+- **Local URL**: http://localhost:3000/msw-tryout/docs/inbox/design-system (when running `cd doc && npm start`)
 
 This project uses the Zudo Design System with custom spacing tokens (hgap/vgap) and color tokens (zd-*). All Tailwind defaults are disabled. Refer to the documentation above for complete guidelines.
 
@@ -275,6 +276,10 @@ npm run serve        # Serve built documentation
 
 This project includes comprehensive Docusaurus documentation located in the `/doc/` directory.
 
+**GitHub Pages (Production):**
+- **URL**: https://takazudo.github.io/msw-tryout/
+- Automatically deployed when changes to `doc/` are merged to `main` branch
+
 **Local Development:**
 ```bash
 cd doc
@@ -297,7 +302,9 @@ Access at: http://localhost:3000/msw-tryout/
 
 For complete API documentation including request/response formats, error codes, and usage examples, see:
 
-**📚 [API Reference Documentation](http://localhost:3000/msw-tryout/api/msw-tryout)** (when running `cd doc && npm start`)
+**📚 API Reference Documentation:**
+- **GitHub Pages**: https://takazudo.github.io/msw-tryout/api/msw-tryout
+- **Local**: http://localhost:3000/msw-tryout/api/msw-tryout (when running `cd doc && npm start`)
 
 Or view the OpenAPI specification directly:
 - File: `/doc/static/api-spec/msw-tryout/openapi.yaml`
