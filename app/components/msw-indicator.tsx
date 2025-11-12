@@ -40,6 +40,7 @@ export function MSWIndicator() {
     <Link
       href="/admin"
       className="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-green-600 transition-colors flex items-center hgap-2 z-50"
+      aria-label="MSW Admin Settings"
     >
       <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
       <div className="vgap-0">

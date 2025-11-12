@@ -7,7 +7,7 @@ import {
   exactPageGalleryItems,
   fewGalleryItems,
 } from './data';
-import { type MockScenario, MSW_SCENARIO_HEADER } from './types';
+import { type MockScenario, MSW_SCENARIO_HEADER, MOCK_SCENARIOS } from './types';
 
 // Helper function to paginate items
 const paginateItems = (items: GalleryItem[], page: number, limit: number): GalleryResponse => {
@@ -34,15 +34,10 @@ const paginateItems = (items: GalleryItem[], page: number, limit: number): Galle
 // MSW handlers run in browser context with msw/browser, so we can read headers
 const getMockScenario = (request: Request): MockScenario => {
   const scenario = request.headers.get(MSW_SCENARIO_HEADER);
-  // Validate scenario is one of the allowed values
-  if (
-    scenario === 'default' ||
-    scenario === 'empty' ||
-    scenario === 'single' ||
-    scenario === 'few' ||
-    scenario === 'exact-page'
-  ) {
-    return scenario;
+  const validScenarios = MOCK_SCENARIOS.map((s) => s.value);
+
+  if (scenario && validScenarios.includes(scenario as MockScenario)) {
+    return scenario as MockScenario;
   }
   return 'default';
 };
@@ -67,8 +62,12 @@ export const handlers = [
   // Mock GET /api/gallery
   http.get('/api/gallery', ({ request }) => {
     const url = new URL(request.url);
-    const page = parseInt(url.searchParams.get('page') || '1', 10);
-    const limit = parseInt(url.searchParams.get('limit') || '30', 10);
+    const pageParam = parseInt(url.searchParams.get('page') || '1', 10);
+    const limitParam = parseInt(url.searchParams.get('limit') || '30', 10);
+
+    // Validate and clamp values
+    const page = Math.max(1, isNaN(pageParam) ? 1 : pageParam);
+    const limit = Math.max(1, Math.min(100, isNaN(limitParam) ? 30 : limitParam));
 
     const scenario = getMockScenario(request);
     const dataset = getDataset(scenario);

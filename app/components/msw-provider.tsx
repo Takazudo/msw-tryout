@@ -25,10 +25,12 @@ export function MSWProvider({ children }: { children: React.ReactNode }) {
         const { worker } = await import('../mocks/browser');
 
         // Intercept all requests and inject scenario as custom header
-        worker.events.on('request:start', ({ request }) => {
+        const handleRequest = ({ request }: { request: Request }) => {
           const scenario = localStorage.getItem('msw_scenario') || 'default';
           request.headers.set(MSW_SCENARIO_HEADER, scenario);
-        });
+        };
+
+        worker.events.on('request:start', handleRequest);
 
         await worker.start({
           onUnhandledRequest: 'bypass',
@@ -39,14 +41,25 @@ export function MSWProvider({ children }: { children: React.ReactNode }) {
         console.info('[MSW] Mocking enabled');
         // eslint-disable-next-line no-console
         console.info('[MSW] Current scenario:', scenario);
+
+        // Cleanup event handler on unmount
+        return () => {
+          worker.events.removeAllListeners('request:start');
+        };
       } catch (error) {
         console.error('[MSW] Failed to initialize:', error);
+        return undefined;
       } finally {
         setMswReady(true);
       }
     };
 
-    initMSW();
+    const cleanup = initMSW();
+
+    // Return cleanup function
+    return () => {
+      cleanup?.then((cleanupFn) => cleanupFn?.());
+    };
   }, [shouldEnableMSW]);
 
   // Block rendering until MSW is ready to avoid race conditions
