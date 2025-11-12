@@ -7,6 +7,7 @@
     "dev": "netlify dev",
     "dev:app": "cd app && pnpm run dev",
     "dev:doc": "cd doc && pnpm start",
+    "dev:api": "netlify dev",
     "build": "cd app && pnpm run build",
     "build:app": "cd app && pnpm run build",
     "build:doc": "cd doc && pnpm run build",
