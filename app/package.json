@@ -7,6 +7,7 @@
     "dev": "next dev --port 3200",
     "build": "next build",
     "start": "next start --port 3200",
+    "serve": "npx serve@latest out -l 3200",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit",

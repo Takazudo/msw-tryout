@@ -81,17 +81,24 @@ jobs:
       - name: Install Playwright browsers
         run: cd app && npx playwright install --with-deps chromium
 
-      - name: Start Next.js dev server
-        run: cd app && npm run dev &
+      - name: Build application
+        run: cd app && npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Start static file server
+        run: cd app && npm run serve &
 
       - name: Start Netlify dev server
         run: npm run dev &
 
       - name: Wait for servers to be ready
         run: |
+          echo "Waiting for static file server..."
+          timeout 60 bash -c 'until curl -s http://localhost:3200 > /dev/null; do sleep 2; done' || exit 1
           echo "Waiting for Netlify dev server..."
           timeout 60 bash -c 'until curl -s http://localhost:8888 > /dev/null; do sleep 2; done' || exit 1
-          echo "Server is ready!"
+          echo "Servers are ready!"
 
       - name: Run smoke tests
         run: cd app && npm run test:smoke
