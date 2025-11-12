@@ -1,16 +1,17 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Gallery with MSW - Empty Results', () => {
-  test.beforeEach(async ({ page }) => {
-    // Set MSW scenario to 'empty' before each test
-    await page.addInitScript(() => {
-      (window as any).__MSW_SCENARIO__ = 'empty';
+  test.beforeEach(async ({ page, context }) => {
+    // Enable MSW and set scenario to 'empty' via localStorage
+    await context.addInitScript(() => {
+      localStorage.setItem('msw_enabled', 'true');
+      localStorage.setItem('msw_scenario', 'empty');
     });
   });
 
   test('should show "no results" message when API returns 0 items', async ({ page }) => {
     // Navigate to the app
-    await page.goto('/?msw=empty');
+    await page.goto('/');
 
     // Wait for the page to load
     await page.waitForLoadState('networkidle');
@@ -23,7 +24,7 @@ test.describe('Gallery with MSW - Empty Results', () => {
 
   test('should hide pagination when API returns 0 items', async ({ page }) => {
     // Navigate to the app
-    await page.goto('/?msw=empty');
+    await page.goto('/');
 
     // Wait for the page to load
     await page.waitForLoadState('networkidle');
@@ -36,8 +37,13 @@ test.describe('Gallery with MSW - Empty Results', () => {
 });
 
 test.describe('Gallery with MSW - Item Count Validation', () => {
-  test('should render correct number of items matching API response', async ({ page }) => {
-    // Navigate to the app with default scenario (260 items)
+  test('should render correct number of items matching API response', async ({ page, context }) => {
+    // Enable MSW with default scenario (260 items)
+    await context.addInitScript(() => {
+      localStorage.setItem('msw_enabled', 'true');
+      localStorage.setItem('msw_scenario', 'default');
+    });
+
     await page.goto('/');
 
     // Wait for the gallery to load
@@ -52,13 +58,14 @@ test.describe('Gallery with MSW - Item Count Validation', () => {
     expect(itemCount).toBe(30);
   });
 
-  test('should render 5 items when API returns 5 items', async ({ page }) => {
+  test('should render 5 items when API returns 5 items', async ({ page, context }) => {
     // Set MSW scenario to 'few' (5 items)
-    await page.addInitScript(() => {
-      (window as any).__MSW_SCENARIO__ = 'few';
+    await context.addInitScript(() => {
+      localStorage.setItem('msw_enabled', 'true');
+      localStorage.setItem('msw_scenario', 'few');
     });
 
-    await page.goto('/?msw=few');
+    await page.goto('/');
     await page.waitForLoadState('networkidle');
     await expect(page.locator('[data-testid="gallery-thumbnail-grid"]')).toBeVisible();
 
@@ -68,12 +75,13 @@ test.describe('Gallery with MSW - Item Count Validation', () => {
     expect(itemCount).toBe(5);
   });
 
-  test('should render 1 item when API returns single item', async ({ page }) => {
-    await page.addInitScript(() => {
-      (window as any).__MSW_SCENARIO__ = 'single';
+  test('should render 1 item when API returns single item', async ({ page, context }) => {
+    await context.addInitScript(() => {
+      localStorage.setItem('msw_enabled', 'true');
+      localStorage.setItem('msw_scenario', 'single');
     });
 
-    await page.goto('/?msw=single');
+    await page.goto('/');
     await page.waitForLoadState('networkidle');
     await expect(page.locator('[data-testid="gallery-thumbnail-grid"]')).toBeVisible();
 
@@ -85,13 +93,14 @@ test.describe('Gallery with MSW - Item Count Validation', () => {
 });
 
 test.describe('Gallery with MSW - Pagination', () => {
-  test('should hide pagination when total pages is 1 or less', async ({ page }) => {
+  test('should hide pagination when total pages is 1 or less', async ({ page, context }) => {
     // Set MSW scenario to 'few' (5 items = 1 page)
-    await page.addInitScript(() => {
-      (window as any).__MSW_SCENARIO__ = 'few';
+    await context.addInitScript(() => {
+      localStorage.setItem('msw_enabled', 'true');
+      localStorage.setItem('msw_scenario', 'few');
     });
 
-    await page.goto('/?msw=few');
+    await page.goto('/');
     await page.waitForLoadState('networkidle');
 
     // Pagination should be hidden when there's only one page
@@ -99,8 +108,13 @@ test.describe('Gallery with MSW - Pagination', () => {
     await expect(pagination).not.toBeVisible();
   });
 
-  test('should show pagination when total pages is greater than 1', async ({ page }) => {
+  test('should show pagination when total pages is greater than 1', async ({ page, context }) => {
     // Default scenario has 260 items = 9 pages
+    await context.addInitScript(() => {
+      localStorage.setItem('msw_enabled', 'true');
+      localStorage.setItem('msw_scenario', 'default');
+    });
+
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 

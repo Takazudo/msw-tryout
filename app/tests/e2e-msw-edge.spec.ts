@@ -1,12 +1,13 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Gallery with MSW - Edge Cases', () => {
-  test('should handle exactly 30 items (one full page)', async ({ page }) => {
-    await page.addInitScript(() => {
-      (window as any).__MSW_SCENARIO__ = 'exact-page';
+  test('should handle exactly 30 items (one full page)', async ({ page, context }) => {
+    await context.addInitScript(() => {
+      localStorage.setItem('msw_enabled', 'true');
+      localStorage.setItem('msw_scenario', 'exact-page');
     });
 
-    await page.goto('/?msw=exact-page');
+    await page.goto('/');
     await page.waitForLoadState('networkidle');
     await expect(page.locator('[data-testid="gallery-thumbnail-grid"]')).toBeVisible();
 
@@ -20,8 +21,13 @@ test.describe('Gallery with MSW - Edge Cases', () => {
     await expect(pagination).not.toBeVisible();
   });
 
-  test('should handle pagination navigation with mock data', async ({ page }) => {
+  test('should handle pagination navigation with mock data', async ({ page, context }) => {
     // Default scenario has 260 items
+    await context.addInitScript(() => {
+      localStorage.setItem('msw_enabled', 'true');
+      localStorage.setItem('msw_scenario', 'default');
+    });
+
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
@@ -49,7 +55,12 @@ test.describe('Gallery with MSW - Edge Cases', () => {
     await expect(prevLink).toBeVisible();
   });
 
-  test('should open modal with mock data', async ({ page }) => {
+  test('should open modal with mock data', async ({ page, context }) => {
+    await context.addInitScript(() => {
+      localStorage.setItem('msw_enabled', 'true');
+      localStorage.setItem('msw_scenario', 'default');
+    });
+
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await expect(page.locator('[data-testid="gallery-thumbnail-grid"]')).toBeVisible();
@@ -71,7 +82,12 @@ test.describe('Gallery with MSW - Edge Cases', () => {
     await expect(page.locator('[data-testid="gallery-dialog"]')).not.toBeVisible();
   });
 
-  test('should fetch gallery item detail from mock API', async ({ page }) => {
+  test('should fetch gallery item detail from mock API', async ({ page, context }) => {
+    await context.addInitScript(() => {
+      localStorage.setItem('msw_enabled', 'true');
+      localStorage.setItem('msw_scenario', 'default');
+    });
+
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
@@ -95,7 +111,12 @@ test.describe('Gallery with MSW - Edge Cases', () => {
     expect(data).toHaveProperty('blurhash');
   });
 
-  test('should handle direct link with slug parameter', async ({ page }) => {
+  test('should handle direct link with slug parameter', async ({ page, context }) => {
+    await context.addInitScript(() => {
+      localStorage.setItem('msw_enabled', 'true');
+      localStorage.setItem('msw_scenario', 'default');
+    });
+
     // Navigate directly to a URL with slug parameter
     await page.goto('/?id=mock-panels-gallery-1');
     await page.waitForLoadState('networkidle');
@@ -107,7 +128,12 @@ test.describe('Gallery with MSW - Edge Cases', () => {
     await expect(page.locator('[data-testid="gallery-dialog"] img')).toBeVisible();
   });
 
-  test('should validate API response structure with mock data', async ({ page }) => {
+  test('should validate API response structure with mock data', async ({ page, context }) => {
+    await context.addInitScript(() => {
+      localStorage.setItem('msw_enabled', 'true');
+      localStorage.setItem('msw_scenario', 'default');
+    });
+
     const response = await page.goto('/');
     expect(response?.status()).toBeLessThan(400);
 

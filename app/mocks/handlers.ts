@@ -32,12 +32,18 @@ const paginateItems = (
   };
 };
 
-// Get the mock scenario from environment or default to 'default'
+// Get the mock scenario from localStorage or default to 'default'
 const getMockScenario = (): string => {
+  // Service workers have access to self, not window
+  // But they don't have access to localStorage directly
+  // Instead, we'll use a message-based approach or check in the browser context
   if (typeof window !== 'undefined') {
-    // Browser environment
-    return (window as any).__MSW_SCENARIO__ || 'default';
+    // Browser environment - read from localStorage
+    return localStorage.getItem('msw_scenario') || 'default';
   }
+  // Service worker context - default scenario
+  // Note: The scenario will be read from localStorage in browser context
+  // before the request reaches the service worker
   return 'default';
 };
 

@@ -8,6 +8,7 @@ MSW is integrated into the project to enable:
 - **Development with mocked APIs**: Test UI behavior without depending on Netlify Functions
 - **E2E testing with controlled scenarios**: Test edge cases like empty results, single items, etc.
 - **Faster test execution**: No need to wait for real API responses
+- **Easy browser-based control**: Admin page for toggling MSW and switching scenarios
 
 ## Installation
 
@@ -24,12 +25,16 @@ The service worker file is located at: `app/public/mockServiceWorker.js`
 
 ```
 app/
+├── app/
+│   └── admin/
+│       └── page.tsx         # MSW Admin Control Page
 ├── mocks/
 │   ├── browser.ts          # MSW browser setup
 │   ├── handlers.ts         # API mock handlers
 │   └── data.ts            # Mock data scenarios
 ├── components/
-│   └── msw-provider.tsx   # MSW initialization component
+│   ├── msw-provider.tsx    # MSW initialization component
+│   └── msw-indicator.tsx   # Visual indicator when MSW is active
 └── tests/
     ├── e2e-real.spec.ts       # Tests against real Netlify API
     ├── e2e-msw.spec.ts        # MSW-based tests (default)
@@ -38,9 +43,44 @@ app/
 
 ## Running the App with MSW
 
-### Development Mode with MSW
+### Using the Admin Control Page (Recommended)
 
-To run the Next.js app with MSW enabled:
+**The easiest way to control MSW is through the browser admin page:**
+
+1. **Start the development server normally:**
+   ```bash
+   pnpm run dev:app
+   # Or from app directory: pnpm run dev
+   ```
+
+2. **Navigate to the admin page:**
+   ```
+   http://localhost:3200/admin
+   ```
+
+3. **Enable MSW** by clicking the "Enable MSW" button
+   - Page will reload with MSW active
+   - A green "MSW Active" indicator will appear in the bottom-right corner
+
+4. **Switch scenarios** using the radio buttons:
+   - Default (260 items)
+   - Empty (0 items)
+   - Single (1 item)
+   - Few (5 items)
+   - Exact Page (30 items)
+
+5. **Visual Indicator:**
+   - When MSW is active, a green floating button appears in the bottom-right
+   - Click it to quickly access the admin page
+   - Shows current scenario
+
+6. **Purge Settings:**
+   - Use the "Purge MSW Settings" button to reset everything
+   - Page will reload with MSW disabled
+
+### Development Mode with MSW (Environment Variable)
+
+You can also enable MSW via environment variable:
 
 ```bash
 # From root directory
@@ -56,18 +96,7 @@ This will:
 2. Enable MSW by setting `NEXT_PUBLIC_ENABLE_MSW=true`
 3. Intercept all API calls to `/api/gallery` and `/api/gallery-item`
 
-### Normal Development Mode (Without MSW)
-
-To run without MSW (using real Netlify Functions):
-
-```bash
-# From root directory
-pnpm run dev
-
-# Or from app directory
-cd app
-pnpm run dev
-```
+**Note:** localStorage settings take precedence over environment variables.
 
 ## Mock Data Scenarios
 
@@ -85,18 +114,24 @@ MSW supports multiple data scenarios for testing different cases:
 
 ### Switching Scenarios
 
-Scenarios are controlled via the `window.__MSW_SCENARIO__` variable:
+Scenarios are controlled via **localStorage**:
 
+#### In Browser (Admin Page)
+Use the `/admin` page to switch scenarios with radio buttons (recommended).
+
+#### In Browser Console
 ```typescript
-// Set scenario in browser console or test setup
-window.__MSW_SCENARIO__ = 'empty';
+// Set scenario manually
+localStorage.setItem('msw_scenario', 'empty');
+// Reload page to apply
+location.reload();
 ```
 
-For e2e tests, use `page.addInitScript()`:
-
+#### In E2E Tests
 ```typescript
-await page.addInitScript(() => {
-  window.__MSW_SCENARIO__ = 'empty';
+await context.addInitScript(() => {
+  localStorage.setItem('msw_enabled', 'true');
+  localStorage.setItem('msw_scenario', 'empty');
 });
 ```
 
@@ -221,11 +256,25 @@ worker.stop();
 worker.start();
 ```
 
-## Environment Variables
+## Environment Variables and localStorage
+
+MSW can be controlled via environment variables OR localStorage:
+
+### Environment Variables
 
 | Variable | Description | Values |
 |----------|-------------|--------|
-| `NEXT_PUBLIC_ENABLE_MSW` | Enable/disable MSW | `'true'` or `undefined` |
+| `NEXT_PUBLIC_ENABLE_MSW` | Enable/disable MSW globally | `'true'` or `undefined` |
+
+### localStorage Keys
+
+| Key | Description | Values |
+|-----|-------------|--------|
+| `msw_enabled` | Enable/disable MSW for current browser | `'true'` or `'false'` |
+| `msw_scenario` | Active mock scenario | `'default'` \| `'empty'` \| `'single'` \| `'few'` \| `'exact-page'` |
+
+**Priority:** localStorage settings take precedence over environment variables.
+This allows per-browser customization even when the env var is set.
 
 ## CI/CD Considerations
 
