@@ -47,7 +47,20 @@ export default defineConfig({
 
   /* Run your local build server before starting the tests */
   webServer: process.env.CI
-    ? undefined
+    ? [
+        {
+          command: 'pnpm run serve',
+          url: 'http://localhost:3200',
+          reuseExistingServer: false,
+          timeout: 60 * 1000,
+        },
+        {
+          command: 'cd .. && ./scripts/ci-netlify-dev.sh',
+          url: 'http://localhost:8888',
+          reuseExistingServer: false,
+          timeout: 120 * 1000,
+        },
+      ]
     : {
         command: 'cd .. && pnpm run dev:api',
         url: 'http://localhost:8888',
