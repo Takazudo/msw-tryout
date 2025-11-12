@@ -33,7 +33,10 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
   const nextItem = currentIndex < items.length - 1 ? items[currentIndex + 1] : null;
 
   const dialogTitleId = useMemo(() => `gallery-dialog-title-${currentSlug}`, [currentSlug]);
-  const dialogDescriptionId = useMemo(() => `gallery-dialog-description-${currentSlug}`, [currentSlug]);
+  const dialogDescriptionId = useMemo(
+    () => `gallery-dialog-description-${currentSlug}`,
+    [currentSlug],
+  );
 
   const handleClose = useCallback(() => {
     if (dialogRef.current) {

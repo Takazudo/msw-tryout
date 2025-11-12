@@ -4,7 +4,10 @@ import { GalleryResponse, GalleryItem } from './types';
 // which gets redirected to /.netlify/functions/*
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
-export async function fetchGalleryItems(page: number = 1, limit: number = 30): Promise<GalleryResponse> {
+export async function fetchGalleryItems(
+  page: number = 1,
+  limit: number = 30,
+): Promise<GalleryResponse> {
   const response = await fetch(`${API_BASE_URL}/api/gallery?page=${page}&limit=${limit}`);
 
   if (!response.ok) {

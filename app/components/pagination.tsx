@@ -48,9 +48,7 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
             >
               1
             </button>
-            {currentPage > 4 && (
-              <span className="px-3 py-2 text-gray-400">...</span>
-            )}
+            {currentPage > 4 && <span className="px-3 py-2 text-gray-400">...</span>}
           </>
         )}
 
@@ -70,9 +68,7 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
 
         {currentPage < totalPages - 2 && (
           <>
-            {currentPage < totalPages - 3 && (
-              <span className="px-3 py-2 text-gray-400">...</span>
-            )}
+            {currentPage < totalPages - 3 && <span className="px-3 py-2 text-gray-400">...</span>}
             <button
               onClick={() => onPageChange(totalPages)}
               className="px-3 py-2 rounded-md bg-gray-800 text-white hover:bg-gray-700 transition-colors"

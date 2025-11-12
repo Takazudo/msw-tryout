@@ -52,7 +52,9 @@ export default function HomePage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-500 mb-4">{error}</p>
-          <p className="text-sm text-gray-500">Make sure you are running with `npm run dev` from the root directory</p>
+          <p className="text-sm text-gray-500">
+            Make sure you are running with `npm run dev` from the root directory
+          </p>
         </div>
       </div>
     );
@@ -73,15 +75,14 @@ export default function HomePage() {
 
         {pagination && (
           <div className="mb-6 text-center text-gray-400">
-            Showing {items.length} of {pagination.totalItems} items (Page {pagination.currentPage} of {pagination.totalPages})
+            Showing {items.length} of {pagination.totalItems} items (Page {pagination.currentPage}{' '}
+            of {pagination.totalPages})
           </div>
         )}
 
         <GalleryThumbnailGrid items={items} />
 
-        {pagination && (
-          <Pagination pagination={pagination} onPageChange={handlePageChange} />
-        )}
+        {pagination && <Pagination pagination={pagination} onPageChange={handlePageChange} />}
 
         {selectedId && <GalleryDialog items={items} currentSlug={selectedId} />}
       </div>

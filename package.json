@@ -7,12 +7,30 @@
     "dev": "netlify dev",
     "build": "cd app && npm run build",
     "start": "netlify dev",
-    "kill": "lsof -ti:3000,8888,9999 | xargs kill -9 2>/dev/null || echo 'No processes found on ports 3000, 8888, 9999'"
+    "kill": "lsof -ti:3000,8888,9999 | xargs kill -9 2>/dev/null || echo 'No processes found on ports 3000, 8888, 9999'",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "app/**/*.{ts,tsx}": [
+      "cd app && eslint --fix",
+      "cd app && prettier --write"
+    ],
+    "app/**/*.{js,jsx}": [
+      "cd app && prettier --write"
+    ],
+    "app/**/*.{json,css}": [
+      "cd app && prettier --write"
+    ],
+    "netlify/functions/**/*.js": [
+      "prettier --write"
+    ]
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.6",
     "netlify-cli": "^17.0.0"
   }
 }
