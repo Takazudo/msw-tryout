@@ -52,7 +52,7 @@ function GalleryThumbnailButton({
         data-testid="gallery-thumbnail"
         data-slug={item.slug}
         onClick={() => onActivate(item.slug)}
-        className="group relative block aspect-square w-full overflow-hidden bg-gray-900 transition-transform hover:ring-3 hover:ring-zd-link hover:z-10 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black focus:z-10"
+        className="group relative block aspect-square w-full overflow-hidden bg-zd-black transition-transform hover:ring-3 hover:ring-zd-strong hover:z-10 focus:outline-none focus:ring-2 focus:ring-zd-white focus:ring-offset-2 focus:ring-offset-zd-black focus:z-10"
         aria-haspopup="dialog"
         aria-label={item.imageAlt || `Open gallery image ${item.slug}`}
         aria-controls="gallery-dialog"
@@ -81,7 +81,7 @@ function GalleryThumbnailButton({
             onError={(event) => onImageError(event.currentTarget, item.thumbnailUrl)}
           />
         ) : (
-          <span className="flex h-full w-full items-center justify-center text-sm text-gray-300">
+          <span className="flex h-full w-full items-center justify-center text-sm text-zd-gray">
             Image failed to load
           </span>
         )}
@@ -215,7 +215,7 @@ export default function GalleryThumbnailGrid({ items }: GalleryThumbnailGridProp
   return (
     <ul
       data-testid="gallery-thumbnail-grid"
-      className="grid grid-cols-2 gap-[1px] sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
+      className="grid grid-cols-2 gap-1px sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
       role="list"
     >
       {items.map((item) => {
