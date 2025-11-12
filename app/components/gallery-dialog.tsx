@@ -137,8 +137,11 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
 
   // Reset image loaded state when slug changes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setImageLoaded(false);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setImageError(false);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsLoading(true);
 
     const timeoutId = setTimeout(() => {
