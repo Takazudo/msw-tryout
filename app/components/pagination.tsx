@@ -30,25 +30,27 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
   }
 
   return (
-    <div className="flex items-center justify-center gap-2 py-8" data-testid="pagination">
+    <div className="flex items-center justify-center gap-hgap-xs py-vgap-lg" data-testid="pagination">
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={!hasPreviousPage}
-        className="px-4 py-2 rounded-md bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700 transition-colors"
+        className="px-hgap-sm py-vgap-xs rounded-sm bg-zd-gray2 text-zd-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-zd-active transition-colors border border-zd-white"
       >
         Previous
       </button>
 
-      <div className="flex gap-1">
+      <div className="flex gap-hgap-2xs">
         {currentPage > 3 && (
           <>
             <button
               onClick={() => onPageChange(1)}
-              className="px-3 py-2 rounded-md bg-gray-800 text-white hover:bg-gray-700 transition-colors"
+              className="px-hgap-xs py-vgap-xs rounded-sm bg-zd-gray2 text-zd-white hover:bg-zd-active transition-colors border border-zd-white"
             >
               1
             </button>
-            {currentPage > 4 && <span className="px-3 py-2 text-gray-400">...</span>}
+            {currentPage > 4 && (
+              <span className="px-hgap-xs py-vgap-xs text-zd-gray">...</span>
+            )}
           </>
         )}
 
@@ -56,10 +58,10 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
           <button
             key={pageNum}
             onClick={() => onPageChange(pageNum)}
-            className={`px-3 py-2 rounded-md transition-colors ${
+            className={`px-hgap-xs py-vgap-xs rounded-sm transition-colors border border-zd-white ${
               pageNum === currentPage
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-800 text-white hover:bg-gray-700'
+                ? 'bg-zd-strong text-zd-black font-bold'
+                : 'bg-zd-gray2 text-zd-white hover:bg-zd-active'
             }`}
           >
             {pageNum}
@@ -68,10 +70,12 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
 
         {currentPage < totalPages - 2 && (
           <>
-            {currentPage < totalPages - 3 && <span className="px-3 py-2 text-gray-400">...</span>}
+            {currentPage < totalPages - 3 && (
+              <span className="px-hgap-xs py-vgap-xs text-zd-gray">...</span>
+            )}
             <button
               onClick={() => onPageChange(totalPages)}
-              className="px-3 py-2 rounded-md bg-gray-800 text-white hover:bg-gray-700 transition-colors"
+              className="px-hgap-xs py-vgap-xs rounded-sm bg-zd-gray2 text-zd-white hover:bg-zd-active transition-colors border border-zd-white"
             >
               {totalPages}
             </button>
@@ -82,7 +86,7 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={!hasNextPage}
-        className="px-4 py-2 rounded-md bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700 transition-colors"
+        className="px-hgap-sm py-vgap-xs rounded-sm bg-zd-gray2 text-zd-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-zd-active transition-colors border border-zd-white"
       >
         Next
       </button>

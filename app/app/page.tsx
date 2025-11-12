@@ -51,8 +51,8 @@ function GalleryContent() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-500 mb-4">{error}</p>
-          <p className="text-sm text-gray-500">
+          <p className="text-zd-error mb-vgap-sm">{error}</p>
+          <p className="text-sm text-zd-gray">
             Make sure you are running with `npm run dev` from the root directory
           </p>
         </div>
@@ -68,13 +68,15 @@ function GalleryContent() {
   };
 
   return (
-    <main className="min-h-screen p-8 bg-gray-950">
+    <main className="min-h-screen p-hgap-md bg-zd-black">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-white mb-2 text-center">Gallery</h1>
-        <p className="text-gray-400 mb-8 text-center">MSW Tryout - Simple Gallery Application</p>
+        <h1 className="text-4xl font-bold text-zd-white mb-vgap-xs text-center">Gallery</h1>
+        <p className="text-zd-gray mb-vgap-lg text-center">
+          MSW Tryout - Simple Gallery Application
+        </p>
 
         {pagination && (
-          <div className="mb-6 text-center text-gray-400">
+          <div className="mb-vgap-md text-center text-zd-gray">
             Showing {items.length} of {pagination.totalItems} items (Page {pagination.currentPage}{' '}
             of {pagination.totalPages})
           </div>

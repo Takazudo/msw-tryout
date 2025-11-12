@@ -1,24 +1,24 @@
 /** @type {import('tailwindcss').Config} */
+
+/**
+ * Tailwind Configuration - Minimal Setup for v4
+ *
+ * All theme configuration (spacing, colors, typography, etc.) has been moved
+ * to the @theme block in app/globals.css.
+ *
+ * This file only contains:
+ * - Content paths for Tailwind to scan
+ * - Custom plugins (if any)
+ *
+ * The @theme reset directive in globals.css disables all Tailwind defaults,
+ * ensuring only Zudo Design System tokens are available.
+ */
+
 module.exports = {
   content: [
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  theme: {
-    extend: {
-      fontFamily: {
-        noto: ['var(--font-noto-sans)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        futura: ['Futura', 'Jost', 'Century Gothic', 'var(--font-noto-sans)', 'sans-serif'],
-        sans: ['Helvetica', 'sans-serif'],
-        mono: ['Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'],
-      },
-      colors: {
-        'zd-black': '#000000',
-        'zd-white': '#ffffff',
-        'zd-link': '#3b82f6',
-      },
-    },
-  },
   plugins: [],
 };
