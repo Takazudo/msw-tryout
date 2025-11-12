@@ -133,9 +133,9 @@ test.describe('Gallery Smoke Test', () => {
     // Wait for dialog to open
     await expect(page.locator('[role="dialog"]')).toBeVisible();
 
-    // Get the URL which should include the slug
+    // Get the URL which should include the id
     const url = page.url();
-    expect(url).toContain('?slug=');
+    expect(url).toContain('?id=');
 
     // Reload the page with the slug in URL
     await page.reload();

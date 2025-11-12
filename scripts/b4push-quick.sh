@@ -25,3 +25,4 @@ echo "======================================"
 echo "✅ Quick checks passed!"
 echo "======================================"
 echo "Run 'npm run b4push:full' for complete tests including smoke tests"
+

@@ -12,17 +12,14 @@
   },
   "lint-staged": {
     "app/**/*.{ts,tsx}": [
-      "cd app && eslint --fix",
-      "cd app && prettier --write"
+      "bash -c 'cd app && npx eslint --fix \"${0#app/}\"'",
+      "bash -c 'cd app && npx prettier --write \"${0#app/}\"'"
     ],
-    "app/**/*.{js,jsx}": [
-      "cd app && prettier --write"
-    ],
-    "app/**/*.{json,css}": [
-      "cd app && prettier --write"
+    "app/**/*.{js,jsx,json,css}": [
+      "bash -c 'cd app && npx prettier --write \"${0#app/}\"'"
     ],
     "netlify/functions/**/*.js": [
-      "prettier --write"
+      "npx prettier --write"
     ]
   },
   "keywords": [],

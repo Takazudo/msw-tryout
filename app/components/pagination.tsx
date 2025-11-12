@@ -30,7 +30,7 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
   }
 
   return (
-    <div className="flex items-center justify-center gap-2 py-8">
+    <div className="flex items-center justify-center gap-2 py-8" data-testid="pagination">
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={!hasPreviousPage}
