@@ -1,17 +1,46 @@
 [build]
+  # Build command for the project
   command = "cd app && npm run build"
-  publish = "app/.next"
+  # Directory with serverless functions (JavaScript files)
   functions = "netlify/functions"
+  # Directory to publish - Next.js build output
+  publish = "app/.next"
 
 [dev]
+  # Port for local development
   port = 8888
+  # Directory with serverless functions for dev
   functions = "netlify/functions"
   functionsPort = 9999
+  # Auto-launch browser
   autoLaunch = false
+  # Disable framework detection and command execution
   framework = "#custom"
+  # Keep-alive command - tail keeps running indefinitely
   command = "tail -f /dev/null"
+  # Target port is where the frontend is running (Next.js dev on 3200)
   targetPort = 3200
 
+[functions]
+  # Node.js version for functions
+  node_bundler = "esbuild"
+
+# Environment variables for all contexts
+[build.environment]
+  # Node version for build
+  NODE_VERSION = "20"
+
+# Headers configuration for security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Security headers
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Redirects for clean API paths
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
