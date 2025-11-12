@@ -162,3 +162,6 @@ worktrees/
 
 # Netlify
 .netlify
+
+# Deno
+deno.lock
