@@ -28,7 +28,7 @@ This is a simple tryout project featuring:
 
 Two terminal sessions are required:
 
-1. **Terminal 1 - Next.js Dev Server (Port 3000)**:
+1. **Terminal 1 - Next.js Dev Server (Port 3200)**:
    ```bash
    cd app && npm run dev
    ```

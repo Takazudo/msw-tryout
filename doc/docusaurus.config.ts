@@ -20,8 +20,8 @@ const config: Config = {
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang.
   i18n: {
-    defaultLocale: 'ja',
-    locales: ['ja'],
+    defaultLocale: 'en',
+    locales: ['en'],
   },
 
   // Add noindex meta tag to prevent search engine indexing
@@ -78,7 +78,7 @@ const config: Config = {
     [
       require.resolve('@easyops-cn/docusaurus-search-local'),
       {
-        language: ['ja'],
+        language: ['en'],
         hashed: true,
         highlightSearchTermsOnTargetPage: true,
         docsRouteBasePath: '/docs',

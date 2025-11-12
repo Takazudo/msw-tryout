@@ -31,9 +31,7 @@ info:
 
 servers:
   - url: http://localhost:8888
-    description: Local development server (via Netlify Dev)
-  - url: http://localhost:9999
-    description: Direct Netlify Functions server
+    description: Local development server (via Netlify Dev with /api prefix)
   - url: https://your-site.netlify.app
     description: Production server (Netlify)
 

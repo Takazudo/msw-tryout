@@ -254,7 +254,7 @@ npm run build        # Build Next.js app
 npm run start        # Start production server
 
 # Documentation (cd doc)
-npm start            # Start Docusaurus dev server (port 3001)
+npm start            # Start Docusaurus dev server (port 3000)
 npm run build        # Build documentation site
 npm run serve        # Serve built documentation
 ```
