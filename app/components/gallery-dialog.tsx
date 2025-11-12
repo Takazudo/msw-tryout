@@ -167,10 +167,10 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
         <button
           data-testid="gallery-dialog-close"
           onClick={handleClose}
-          className="fixed top-hgap-sm right-hgap-sm z-[100] p-vgap-xs text-white hover:text-zd-gray transition-colors bg-zd-black/50 rounded-sm backdrop-blur"
+          className="fixed top-hgap-sm right-hgap-sm z-[100] p-hgap-xs text-white hover:text-zd-gray transition-colors bg-zd-black/70 rounded-sm backdrop-blur"
           aria-label="Close dialog"
         >
-          <CloseIcon className="w-6 h-6" />
+          <CloseIcon className="w-8 h-8" />
         </button>
 
         {/* Navigation buttons */}
@@ -178,10 +178,10 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
           <button
             data-testid="gallery-dialog-prev"
             onClick={handlePrevious}
-            className="fixed left-hgap-xs top-[50vh] z-[100] -translate-y-1/2 rounded-full text-white backdrop-blur transition-colors hover:bg-zd-white/20 bg-zd-black/50 p-hgap-xs"
+            className="fixed left-hgap-sm top-[50vh] z-[100] -translate-y-1/2 rounded-full text-white backdrop-blur transition-colors hover:bg-zd-white/30 bg-zd-black/70 p-hgap-sm"
             aria-label="Previous image"
           >
-            <ChevronLeftIcon className="h-[50px] w-[50px]" />
+            <ChevronLeftIcon className="h-12 w-12" />
           </button>
         )}
 
@@ -189,10 +189,10 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
           <button
             data-testid="gallery-dialog-next"
             onClick={handleNext}
-            className="fixed right-hgap-xs top-[50vh] z-[100] -translate-y-1/2 rounded-full text-white backdrop-blur transition-colors hover:bg-zd-white/20 bg-zd-black/50 p-hgap-xs"
+            className="fixed right-hgap-sm top-[50vh] z-[100] -translate-y-1/2 rounded-full text-white backdrop-blur transition-colors hover:bg-zd-white/30 bg-zd-black/70 p-hgap-sm"
             aria-label="Next image"
           >
-            <ChevronRightIcon className="h-[50px] w-[50px]" />
+            <ChevronRightIcon className="h-12 w-12" />
           </button>
         )}
 
