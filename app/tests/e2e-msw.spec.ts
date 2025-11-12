@@ -1,0 +1,111 @@
+import { test, expect } from '@playwright/test';
+
+test.describe('Gallery with MSW - Empty Results', () => {
+  test.beforeEach(async ({ page }) => {
+    // Set MSW scenario to 'empty' before each test
+    await page.addInitScript(() => {
+      (window as any).__MSW_SCENARIO__ = 'empty';
+    });
+  });
+
+  test('should show "no results" message when API returns 0 items', async ({ page }) => {
+    // Navigate to the app
+    await page.goto('/?msw=empty');
+
+    // Wait for the page to load
+    await page.waitForLoadState('networkidle');
+
+    // Check that "no results" or "no items" message is visible
+    // This test is expected to fail initially because this UI doesn't exist yet
+    const noResultsMessage = page.getByText(/no (results|items|gallery items)/i);
+    await expect(noResultsMessage).toBeVisible();
+  });
+
+  test('should hide pagination when API returns 0 items', async ({ page }) => {
+    // Navigate to the app
+    await page.goto('/?msw=empty');
+
+    // Wait for the page to load
+    await page.waitForLoadState('networkidle');
+
+    // Check that pagination is NOT visible
+    // This test is expected to fail initially because pagination hiding logic doesn't exist yet
+    const pagination = page.locator('[data-testid="pagination"]');
+    await expect(pagination).not.toBeVisible();
+  });
+});
+
+test.describe('Gallery with MSW - Item Count Validation', () => {
+  test('should render correct number of items matching API response', async ({ page }) => {
+    // Navigate to the app with default scenario (260 items)
+    await page.goto('/');
+
+    // Wait for the gallery to load
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator('[data-testid="gallery-thumbnail-grid"]')).toBeVisible();
+
+    // Count the number of gallery items rendered
+    const galleryItems = page.locator('[data-testid="gallery-thumbnail-grid"] a');
+    const itemCount = await galleryItems.count();
+
+    // Default should show 30 items per page
+    expect(itemCount).toBe(30);
+  });
+
+  test('should render 5 items when API returns 5 items', async ({ page }) => {
+    // Set MSW scenario to 'few' (5 items)
+    await page.addInitScript(() => {
+      (window as any).__MSW_SCENARIO__ = 'few';
+    });
+
+    await page.goto('/?msw=few');
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator('[data-testid="gallery-thumbnail-grid"]')).toBeVisible();
+
+    const galleryItems = page.locator('[data-testid="gallery-thumbnail-grid"] a');
+    const itemCount = await galleryItems.count();
+
+    expect(itemCount).toBe(5);
+  });
+
+  test('should render 1 item when API returns single item', async ({ page }) => {
+    await page.addInitScript(() => {
+      (window as any).__MSW_SCENARIO__ = 'single';
+    });
+
+    await page.goto('/?msw=single');
+    await page.waitForLoadState('networkidle');
+    await expect(page.locator('[data-testid="gallery-thumbnail-grid"]')).toBeVisible();
+
+    const galleryItems = page.locator('[data-testid="gallery-thumbnail-grid"] a');
+    const itemCount = await galleryItems.count();
+
+    expect(itemCount).toBe(1);
+  });
+});
+
+test.describe('Gallery with MSW - Pagination', () => {
+  test('should hide pagination when total pages is 1 or less', async ({ page }) => {
+    // Set MSW scenario to 'few' (5 items = 1 page)
+    await page.addInitScript(() => {
+      (window as any).__MSW_SCENARIO__ = 'few';
+    });
+
+    await page.goto('/?msw=few');
+    await page.waitForLoadState('networkidle');
+
+    // Pagination should be hidden when there's only one page
+    const pagination = page.locator('[data-testid="pagination"]');
+    await expect(pagination).not.toBeVisible();
+  });
+
+  test('should show pagination when total pages is greater than 1', async ({ page }) => {
+    // Default scenario has 260 items = 9 pages
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    // Pagination should be visible
+    const pagination = page.locator('[data-testid="pagination"]');
+    await expect(pagination).toBeVisible();
+  });
+});
