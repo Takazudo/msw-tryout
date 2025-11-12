@@ -92,7 +92,7 @@ jobs:
         run: cd app && pnpm run serve &
 
       - name: Start Netlify dev server
-        run: pnpm run dev:api &
+        run: pnpm exec netlify dev --cwd . &
 
       - name: Wait for servers to be ready
         run: |
