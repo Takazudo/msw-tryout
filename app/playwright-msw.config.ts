@@ -40,10 +40,17 @@ export default defineConfig({
     },
   ],
 
-  /* Run dev server with MSW enabled before starting the tests */
+  /* Run server before starting the tests */
   webServer: process.env.CI
-    ? undefined
+    ? {
+        // In CI: serve the production build (no API server needed, MSW handles all API calls)
+        command: 'pnpm run serve',
+        url: 'http://localhost:3200',
+        reuseExistingServer: false,
+        timeout: 60 * 1000,
+      }
     : {
+        // Local dev: run Next.js dev server with MSW enabled
         command: 'NEXT_PUBLIC_ENABLE_MSW=true pnpm run dev',
         url: 'http://localhost:3200',
         reuseExistingServer: true,
