@@ -260,10 +260,7 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
           <div className="flex-1 overflow-y-auto p-hgap-md">
             {/* Description */}
             <div className="mb-vgap-md">
-              <p className="text-white">
-                <span className="font-semibold mr-hgap-xs">{currentItem.user}</span>
-                {currentItem.description}
-              </p>
+              <p className="text-white">{currentItem.description}</p>
             </div>
 
             {/* Hashtags */}
