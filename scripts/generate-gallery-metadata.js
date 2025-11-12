@@ -127,18 +127,10 @@ const fs = require('fs');
 const path = require('path');
 
 const galleryDataPath = path.join(__dirname, '../netlify/functions/gallery-data.js');
-const content = fs.readFileSync(galleryDataPath, 'utf-8');
 
-// Extract the galleryData array
-const arrayMatch = content.match(/export const galleryData = \[([\s\S]*?)\];/);
-if (!arrayMatch) {
-  console.error('Could not find galleryData array');
-  process.exit(1);
-}
-
-// Parse the existing data
-const dataString = '[' + arrayMatch[1] + ']';
-const galleryData = eval(dataString);
+// Import the module directly instead of using eval (security fix)
+const galleryDataModule = require(galleryDataPath);
+const galleryData = galleryDataModule.galleryData;
 
 console.log(`Found ${galleryData.length} items`);
 

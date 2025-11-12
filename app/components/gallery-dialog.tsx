@@ -253,37 +253,25 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
         <div className="w-full lg:w-[400px] bg-zd-black border-t lg:border-t-0 lg:border-l border-zd-gray/20 flex flex-col max-h-[40vh] lg:max-h-none">
           {/* User info header */}
           <div className="p-hgap-md border-b border-zd-gray/20">
-            <div className="flex items-center gap-hgap-sm">
-              <div className="w-[32px] h-[32px] rounded-full bg-zd-gray/30 flex items-center justify-center text-white font-bold text-sm">
-                {currentItem.user.charAt(0)}
-              </div>
-              <span className="text-white font-semibold">{currentItem.user}</span>
-            </div>
+            <span className="text-white font-semibold">{currentItem.user}</span>
           </div>
 
           {/* Scrollable content area */}
           <div className="flex-1 overflow-y-auto p-hgap-md">
             {/* Description */}
             <div className="mb-vgap-md">
-              <div className="flex gap-hgap-sm">
-                <div className="w-[32px] h-[32px] rounded-full bg-zd-gray/30 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-                  {currentItem.user.charAt(0)}
-                </div>
-                <div className="flex-1">
-                  <p className="text-white">
-                    <span className="font-semibold mr-hgap-xs">{currentItem.user}</span>
-                    {currentItem.description}
-                  </p>
-                </div>
-              </div>
+              <p className="text-white">
+                <span className="font-semibold mr-hgap-xs">{currentItem.user}</span>
+                {currentItem.description}
+              </p>
             </div>
 
             {/* Hashtags */}
             {currentItem.hashtags && currentItem.hashtags.length > 0 && (
               <div className="mb-vgap-md">
                 <div className="flex flex-wrap gap-hgap-xs">
-                  {currentItem.hashtags.map((tag, index) => (
-                    <span key={index} className="text-zd-blue text-sm">
+                  {currentItem.hashtags.map((tag) => (
+                    <span key={tag} className="text-zd-blue text-sm">
                       {tag}
                     </span>
                   ))}
