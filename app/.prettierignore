@@ -1,0 +1,12 @@
+node_modules
+dist
+build
+.cache
+.next
+out
+public
+coverage
+package-lock.json
+*.min.js
+*.svg
+__inbox

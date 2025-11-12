@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import GalleryThumbnailGrid from '@/components/gallery-thumbnail-grid';
 import GalleryDialog from '@/components/gallery-dialog';
@@ -52,7 +52,9 @@ function GalleryContent() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-zd-error mb-vgap-sm">{error}</p>
-          <p className="text-sm text-zd-gray">Make sure you are running with `npm run dev` from the root directory</p>
+          <p className="text-sm text-zd-gray">
+            Make sure you are running with `npm run dev` from the root directory
+          </p>
         </div>
       </div>
     );
@@ -69,19 +71,20 @@ function GalleryContent() {
     <main className="min-h-screen p-hgap-md bg-zd-black">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-zd-white mb-vgap-xs text-center">Gallery</h1>
-        <p className="text-zd-gray mb-vgap-lg text-center">MSW Tryout - Simple Gallery Application</p>
+        <p className="text-zd-gray mb-vgap-lg text-center">
+          MSW Tryout - Simple Gallery Application
+        </p>
 
         {pagination && (
           <div className="mb-vgap-md text-center text-zd-gray">
-            Showing {items.length} of {pagination.totalItems} items (Page {pagination.currentPage} of {pagination.totalPages})
+            Showing {items.length} of {pagination.totalItems} items (Page {pagination.currentPage}{' '}
+            of {pagination.totalPages})
           </div>
         )}
 
         <GalleryThumbnailGrid items={items} />
 
-        {pagination && (
-          <Pagination pagination={pagination} onPageChange={handlePageChange} />
-        )}
+        {pagination && <Pagination pagination={pagination} onPageChange={handlePageChange} />}
 
         {selectedId && <GalleryDialog items={items} currentSlug={selectedId} />}
       </div>
@@ -91,11 +94,13 @@ function GalleryContent() {
 
 export default function HomePage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="loader" />
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="loader" />
+        </div>
+      }
+    >
       <GalleryContent />
     </Suspense>
   );

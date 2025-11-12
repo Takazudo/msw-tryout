@@ -46,7 +46,10 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
   }
 
   return (
-    <div className="flex items-center justify-center gap-hgap-xs py-vgap-lg">
+    <div
+      className="flex items-center justify-center gap-hgap-xs py-vgap-lg"
+      data-testid="pagination"
+    >
       {hasPreviousPage ? (
         <a
           href={buildPageUrl(currentPage - 1)}
@@ -83,9 +86,7 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
             >
               1
             </a>
-            {currentPage > 4 && (
-              <span className="px-hgap-xs py-vgap-xs text-zd-gray">...</span>
-            )}
+            {currentPage > 4 && <span className="px-hgap-xs py-vgap-xs text-zd-gray">...</span>}
           </>
         )}
 
