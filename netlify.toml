@@ -1,0 +1,18 @@
+[build]
+  command = "cd app && npm run build"
+  publish = "app/.next"
+  functions = "netlify/functions"
+
+[dev]
+  port = 8888
+  functions = "netlify/functions"
+  functionsPort = 9999
+  autoLaunch = false
+  framework = "#custom"
+  command = "tail -f /dev/null"
+  targetPort = 3000
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
