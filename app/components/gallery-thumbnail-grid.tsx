@@ -9,7 +9,7 @@ interface GalleryThumbnailGridProps {
   items: GalleryItem[];
 }
 
-interface GalleryThumbnailButtonProps {
+interface GalleryThumbnailLinkProps {
   item: GalleryItem;
   href: string;
   isLoaded: boolean;
@@ -21,7 +21,7 @@ interface GalleryThumbnailButtonProps {
   onImageError: (image: HTMLImageElement, src: string) => void;
 }
 
-function GalleryThumbnailButton({
+function GalleryThumbnailLink({
   item,
   href,
   isLoaded,
@@ -31,7 +31,7 @@ function GalleryThumbnailButton({
   unregisterImage,
   onImageLoad,
   onImageError,
-}: GalleryThumbnailButtonProps) {
+}: GalleryThumbnailLinkProps) {
   const imageRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
@@ -232,7 +232,7 @@ export default function GalleryThumbnailGrid({ items }: GalleryThumbnailGridProp
     >
       {items.map((item) => {
         return (
-          <GalleryThumbnailButton
+          <GalleryThumbnailLink
             key={item.slug}
             item={item}
             href={buildThumbnailUrl(item.slug)}
