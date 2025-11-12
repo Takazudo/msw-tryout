@@ -4,6 +4,10 @@ export interface GalleryItem {
   blurhash: string;
   thumbnailUrl: string;
   enlargedUrl: string;
+  user: string;
+  description: string;
+  created_at: string;
+  hashtags: string[];
 }
 
 export interface PaginationInfo {

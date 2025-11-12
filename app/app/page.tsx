@@ -75,16 +75,24 @@ function GalleryContent() {
           MSW Tryout - Simple Gallery Application
         </p>
 
-        {pagination && (
+        {pagination && pagination.totalItems > 0 && (
           <div className="mb-vgap-md text-center text-zd-gray">
             Showing {items.length} of {pagination.totalItems} items (Page {pagination.currentPage}{' '}
             of {pagination.totalPages})
           </div>
         )}
 
-        <GalleryThumbnailGrid items={items} />
+        {items.length === 0 ? (
+          <div className="text-center py-vgap-xl">
+            <p className="text-zd-gray text-lg">No gallery items found</p>
+          </div>
+        ) : (
+          <GalleryThumbnailGrid items={items} />
+        )}
 
-        {pagination && <Pagination pagination={pagination} onPageChange={handlePageChange} />}
+        {pagination && pagination.totalPages > 1 && (
+          <Pagination pagination={pagination} onPageChange={handlePageChange} />
+        )}
 
         {selectedId && <GalleryDialog items={items} currentSlug={selectedId} />}
       </div>

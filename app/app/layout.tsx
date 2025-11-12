@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import type React from 'react';
 import './globals.css';
+import { MSWProvider } from '../components/msw-provider';
+import { MSWIndicator } from '../components/msw-indicator';
 
 export const metadata: Metadata = {
   title: 'MSW Gallery Tryout',
@@ -14,7 +16,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <MSWProvider>
+          {children}
+          <MSWIndicator />
+        </MSWProvider>
+      </body>
     </html>
   );
 }

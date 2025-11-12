@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "./scripts/dev.sh",
     "dev:app": "cd app && pnpm run dev",
+    "dev:app-mock": "cd app && pnpm run dev:mock",
     "dev:doc": "cd doc && pnpm start",
     "dev:api": "netlify dev",
     "build": "cd app && pnpm run build",
