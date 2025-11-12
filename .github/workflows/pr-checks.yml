@@ -83,10 +83,11 @@ jobs:
       - name: Install Playwright browsers
         run: cd app && pnpm exec playwright install --with-deps chromium
 
-      - name: Build application
+      - name: Build application with MSW enabled
         run: cd app && pnpm run build
         env:
           NODE_ENV: production
+          NEXT_PUBLIC_ENABLE_MSW: true
 
       - name: Run e2e tests with MSW
         run: cd app && pnpm run test:e2e:msw
