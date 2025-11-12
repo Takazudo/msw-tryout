@@ -5,7 +5,11 @@
   "private": true,
   "scripts": {
     "dev": "netlify dev",
+    "dev:app": "cd app && pnpm run dev",
+    "dev:doc": "cd doc && pnpm start",
     "build": "cd app && pnpm run build",
+    "build:app": "cd app && pnpm run build",
+    "build:doc": "cd doc && pnpm run build",
     "start": "netlify dev",
     "kill": "lsof -ti:3000,3200,8888,9999 | xargs kill -9 2>/dev/null || echo 'No processes found on ports 3000, 3200, 8888, 9999'",
     "b4push": "./scripts/b4push.sh",
