@@ -4,7 +4,7 @@
   "description": "MSW tryout with Netlify Functions and Next.js",
   "private": true,
   "scripts": {
-    "dev": "pnpm run dev:app & pnpm run dev:doc & pnpm run dev:api",
+    "dev": "./scripts/dev.sh",
     "dev:app": "cd app && pnpm run dev",
     "dev:doc": "cd doc && pnpm start",
     "dev:api": "netlify dev",
