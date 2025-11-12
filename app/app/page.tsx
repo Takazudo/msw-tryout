@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import GalleryThumbnailGrid from '@/components/gallery-thumbnail-grid';
 import GalleryDialog from '@/components/gallery-dialog';
@@ -8,7 +8,7 @@ import Pagination from '@/components/pagination';
 import { fetchGalleryItems } from '@/lib/api';
 import type { GalleryItem, PaginationInfo } from '@/lib/types';
 
-export default function HomePage() {
+function GalleryContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const selectedId = searchParams.get('id');
@@ -86,5 +86,17 @@ export default function HomePage() {
         {selectedId && <GalleryDialog items={items} currentSlug={selectedId} />}
       </div>
     </main>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="loader" />
+      </div>
+    }>
+      <GalleryContent />
+    </Suspense>
   );
 }
