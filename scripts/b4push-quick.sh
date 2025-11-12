@@ -11,18 +11,18 @@ cd app
 
 # Step 1: Run code quality checks
 echo "✨ Running code quality checks..."
-npm run check
+pnpm run check
 echo "✅ Code quality checks passed"
 echo
 
 # Step 2: Build check
 echo "🔨 Testing build..."
-npm run build
+pnpm run build
 echo "✅ Build succeeded"
 echo
 
 echo "======================================"
 echo "✅ Quick checks passed!"
 echo "======================================"
-echo "Run 'npm run b4push:full' for complete tests including smoke tests"
+echo "Run 'pnpm run b4push:full' for complete tests including smoke tests"
 

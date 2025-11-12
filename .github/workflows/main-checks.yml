@@ -13,30 +13,31 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.21.0
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: 'app/package-lock.json'
+          cache: 'pnpm'
 
-      - name: Install root dependencies
-        run: npm ci
-
-      - name: Install app dependencies
-        run: cd app && npm ci
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Run type checking
-        run: cd app && npm run typecheck
+        run: cd app && pnpm run typecheck
 
       - name: Run linting
-        run: cd app && npm run lint
+        run: cd app && pnpm run lint
 
       - name: Run format check
-        run: cd app && npm run format
+        run: cd app && pnpm run format
 
       - name: Build application
-        run: cd app && npm run build
+        run: cd app && pnpm run build
         env:
           NODE_ENV: production
 
@@ -48,35 +49,36 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.21.0
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: 'app/package-lock.json'
+          cache: 'pnpm'
 
       - name: Cache Playwright browsers
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ hashFiles('app/package-lock.json') }}
+          key: playwright-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             playwright-${{ runner.os }}-
 
-      - name: Install root dependencies
-        run: npm ci
-
-      - name: Install app dependencies
-        run: cd app && npm ci
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Install Playwright browsers
-        run: cd app && npx playwright install --with-deps chromium
+        run: cd app && pnpm exec playwright install --with-deps chromium
 
       - name: Start Next.js dev server
-        run: cd app && npm run dev &
+        run: cd app && pnpm run dev &
 
       - name: Start Netlify dev server
-        run: npm run dev &
+        run: pnpm run dev &
 
       - name: Wait for servers to be ready
         run: |
@@ -85,7 +87,7 @@ jobs:
           echo "Server is ready!"
 
       - name: Run smoke tests
-        run: cd app && npm run test:smoke
+        run: cd app && pnpm run test:smoke
 
       - name: Upload test results
         if: failure()

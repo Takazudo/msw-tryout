@@ -166,8 +166,7 @@
   --line-height-loose: var(--zd-lineHeight-loose);
 
   /* Font families */
-  --font-noto: 'Noto Sans', ui-sans-serif, system-ui, sans-serif;
-  --font-futura: Futura, Jost, 'Century Gothic', 'Noto Sans', sans-serif;
+  --font-futura: Futura, Jost, 'Century Gothic', sans-serif;
   --font-sans: Helvetica, sans-serif;
   --font-mono: Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 
@@ -379,7 +378,7 @@
     @apply underline-offset-4 bg-zd-black;
   }
   body {
-    @apply text-base font-noto text-zd-white bg-zd-black font-light;
+    @apply text-base font-futura text-zd-white bg-zd-black font-light;
     text-wrap: pretty;
     background: 0 0 repeat-y;
   }
