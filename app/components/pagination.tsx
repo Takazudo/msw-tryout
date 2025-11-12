@@ -1,12 +1,28 @@
+'use client';
+
 import { PaginationInfo } from '@/lib/types';
+import { usePathname, useSearchParams } from 'next/navigation';
+import type { MouseEvent } from 'react';
 
 interface PaginationProps {
   pagination: PaginationInfo;
   onPageChange: (page: number) => void;
 }
 
+function isModifiedEvent(event: MouseEvent): boolean {
+  return !!(event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0);
+}
+
 export default function Pagination({ pagination, onPageChange }: PaginationProps) {
   const { currentPage, totalPages, hasPreviousPage, hasNextPage } = pagination;
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const buildPageUrl = (page: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', page.toString());
+    return `${pathname}?${params.toString()}`;
+  };
 
   const getPageNumbers = () => {
     const pages = [];
@@ -31,65 +47,115 @@ export default function Pagination({ pagination, onPageChange }: PaginationProps
 
   return (
     <div className="flex items-center justify-center gap-hgap-xs py-vgap-lg">
-      <button
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={!hasPreviousPage}
-        className="px-hgap-sm py-vgap-xs rounded-sm bg-zd-gray2 text-zd-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-zd-active transition-colors border border-zd-white"
-      >
-        Previous
-      </button>
+      {hasPreviousPage ? (
+        <a
+          href={buildPageUrl(currentPage - 1)}
+          onClick={(e) => {
+            if (isModifiedEvent(e)) return;
+            e.preventDefault();
+            onPageChange(currentPage - 1);
+          }}
+          className="px-hgap-sm py-vgap-xs rounded-sm bg-zd-gray2 text-zd-white hover:bg-zd-active transition-colors border border-zd-white"
+        >
+          Previous
+        </a>
+      ) : (
+        <span
+          role="button"
+          aria-disabled="true"
+          className="px-hgap-sm py-vgap-xs rounded-sm bg-zd-gray2 text-zd-white opacity-50 cursor-not-allowed border border-zd-white"
+        >
+          Previous
+        </span>
+      )}
 
       <div className="flex gap-hgap-2xs">
         {currentPage > 3 && (
           <>
-            <button
-              onClick={() => onPageChange(1)}
+            <a
+              href={buildPageUrl(1)}
+              onClick={(e) => {
+                if (isModifiedEvent(e)) return;
+                e.preventDefault();
+                onPageChange(1);
+              }}
               className="px-hgap-xs py-vgap-xs rounded-sm bg-zd-gray2 text-zd-white hover:bg-zd-active transition-colors border border-zd-white"
             >
               1
-            </button>
+            </a>
             {currentPage > 4 && (
               <span className="px-hgap-xs py-vgap-xs text-zd-gray">...</span>
             )}
           </>
         )}
 
-        {getPageNumbers().map((pageNum) => (
-          <button
-            key={pageNum}
-            onClick={() => onPageChange(pageNum)}
-            className={`px-hgap-xs py-vgap-xs rounded-sm transition-colors border border-zd-white ${
-              pageNum === currentPage
-                ? 'bg-zd-strong text-zd-black font-bold'
-                : 'bg-zd-gray2 text-zd-white hover:bg-zd-active'
-            }`}
-          >
-            {pageNum}
-          </button>
-        ))}
+        {getPageNumbers().map((pageNum) => {
+          const isCurrentPage = pageNum === currentPage;
+          return isCurrentPage ? (
+            <span
+              key={pageNum}
+              aria-current="page"
+              className="px-hgap-xs py-vgap-xs rounded-sm bg-zd-strong text-zd-black font-bold border border-zd-white"
+            >
+              {pageNum}
+            </span>
+          ) : (
+            <a
+              key={pageNum}
+              href={buildPageUrl(pageNum)}
+              onClick={(e) => {
+                if (isModifiedEvent(e)) return;
+                e.preventDefault();
+                onPageChange(pageNum);
+              }}
+              className="px-hgap-xs py-vgap-xs rounded-sm transition-colors border border-zd-white bg-zd-gray2 text-zd-white hover:bg-zd-active"
+            >
+              {pageNum}
+            </a>
+          );
+        })}
 
         {currentPage < totalPages - 2 && (
           <>
             {currentPage < totalPages - 3 && (
               <span className="px-hgap-xs py-vgap-xs text-zd-gray">...</span>
             )}
-            <button
-              onClick={() => onPageChange(totalPages)}
+            <a
+              href={buildPageUrl(totalPages)}
+              onClick={(e) => {
+                if (isModifiedEvent(e)) return;
+                e.preventDefault();
+                onPageChange(totalPages);
+              }}
               className="px-hgap-xs py-vgap-xs rounded-sm bg-zd-gray2 text-zd-white hover:bg-zd-active transition-colors border border-zd-white"
             >
               {totalPages}
-            </button>
+            </a>
           </>
         )}
       </div>
 
-      <button
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={!hasNextPage}
-        className="px-hgap-sm py-vgap-xs rounded-sm bg-zd-gray2 text-zd-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-zd-active transition-colors border border-zd-white"
-      >
-        Next
-      </button>
+      {hasNextPage ? (
+        <a
+          href={buildPageUrl(currentPage + 1)}
+          onClick={(e) => {
+            if (isModifiedEvent(e)) return;
+            e.preventDefault();
+            onPageChange(currentPage + 1);
+          }}
+          className="px-hgap-sm py-vgap-xs rounded-sm bg-zd-gray2 text-zd-white hover:bg-zd-active transition-colors border border-zd-white"
+        >
+          Next
+        </a>
+      ) : (
+        <span
+          role="button"
+          aria-disabled="true"
+          className="px-hgap-sm py-vgap-xs rounded-sm bg-zd-gray2 text-zd-white opacity-50 cursor-not-allowed border border-zd-white"
+        >
+          Next
+        </span>
+      )}
     </div>
   );
 }

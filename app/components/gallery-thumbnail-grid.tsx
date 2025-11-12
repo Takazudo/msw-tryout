@@ -1,16 +1,22 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import type { MouseEvent } from 'react';
 import type { GalleryItem } from '@/lib/types';
 import { Blurhash } from '@/components/blurhash';
+
+function isModifiedEvent(event: MouseEvent): boolean {
+  return !!(event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0);
+}
 
 interface GalleryThumbnailGridProps {
   items: GalleryItem[];
 }
 
-interface GalleryThumbnailButtonProps {
+interface GalleryThumbnailLinkProps {
   item: GalleryItem;
+  href: string;
   isLoaded: boolean;
   isErrored: boolean;
   onActivate: (slug: string) => void;
@@ -20,8 +26,9 @@ interface GalleryThumbnailButtonProps {
   onImageError: (image: HTMLImageElement, src: string) => void;
 }
 
-function GalleryThumbnailButton({
+function GalleryThumbnailLink({
   item,
+  href,
   isLoaded,
   isErrored,
   onActivate,
@@ -29,7 +36,7 @@ function GalleryThumbnailButton({
   unregisterImage,
   onImageLoad,
   onImageError,
-}: GalleryThumbnailButtonProps) {
+}: GalleryThumbnailLinkProps) {
   const imageRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
@@ -47,13 +54,16 @@ function GalleryThumbnailButton({
 
   return (
     <li className="relative" role="listitem">
-      <button
-        type="button"
+      <a
+        href={href}
         data-testid="gallery-thumbnail"
         data-slug={item.slug}
-        onClick={() => onActivate(item.slug)}
+        onClick={(e) => {
+          if (isModifiedEvent(e)) return;
+          e.preventDefault();
+          onActivate(item.slug);
+        }}
         className="group relative block aspect-square w-full overflow-hidden bg-zd-black transition-transform hover:ring-3 hover:ring-zd-strong hover:z-10 focus:outline-none focus:ring-2 focus:ring-zd-white focus:ring-offset-2 focus:ring-offset-zd-black focus:z-10"
-        aria-haspopup="dialog"
         aria-label={item.imageAlt || `Open gallery image ${item.slug}`}
         aria-controls="gallery-dialog"
       >
@@ -85,26 +95,34 @@ function GalleryThumbnailButton({
             Image failed to load
           </span>
         )}
-      </button>
+      </a>
     </li>
   );
 }
 
 export default function GalleryThumbnailGrid({ items }: GalleryThumbnailGridProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const [erroredImages, setErroredImages] = useState<Set<string>>(new Set());
   const observerRef = useRef<IntersectionObserver | null>(null);
   const pendingImagesRef = useRef(new Set<HTMLImageElement>());
 
-  const handleThumbnailClick = useCallback(
+  const buildThumbnailUrl = useCallback(
     (slug: string) => {
       const params = new URLSearchParams(searchParams.toString());
       params.set('id', slug);
-      router.push(`/?${params.toString()}`, { scroll: false });
+      return `${pathname}?${params.toString()}`;
     },
-    [router, searchParams],
+    [searchParams, pathname],
+  );
+
+  const handleThumbnailClick = useCallback(
+    (slug: string) => {
+      router.push(buildThumbnailUrl(slug), { scroll: false });
+    },
+    [router, buildThumbnailUrl],
   );
 
   const handleImageLoad = useCallback((image: HTMLImageElement, src: string) => {
@@ -220,9 +238,10 @@ export default function GalleryThumbnailGrid({ items }: GalleryThumbnailGridProp
     >
       {items.map((item) => {
         return (
-          <GalleryThumbnailButton
+          <GalleryThumbnailLink
             key={item.slug}
             item={item}
+            href={buildThumbnailUrl(item.slug)}
             isLoaded={loadedImages.has(item.thumbnailUrl)}
             isErrored={erroredImages.has(item.thumbnailUrl)}
             onActivate={handleThumbnailClick}
