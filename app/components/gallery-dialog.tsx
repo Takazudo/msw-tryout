@@ -271,7 +271,10 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
               <div className="mb-vgap-md">
                 <div className="flex flex-wrap gap-hgap-xs">
                   {currentItem.hashtags.map((tag) => (
-                    <span key={tag} className="text-zd-blue text-sm">
+                    <span
+                      key={tag}
+                      className="text-zd-black bg-zd-gray text-sm px-hgap-2xs py-vgap-2xs rounded-sm"
+                    >
                       {tag}
                     </span>
                   ))}
