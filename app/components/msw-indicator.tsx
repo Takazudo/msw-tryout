@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { type MockScenario } from '../mocks/types';
 
 export function MSWIndicator() {
   const [mswEnabled, setMswEnabled] = useState(() => {
@@ -10,9 +11,9 @@ export function MSWIndicator() {
     const envEnabled = process.env.NEXT_PUBLIC_ENABLE_MSW === 'true';
     return localStorageEnabled || envEnabled;
   });
-  const [scenario, setScenario] = useState(() => {
+  const [scenario, setScenario] = useState<MockScenario>(() => {
     if (typeof window === 'undefined') return 'default';
-    return localStorage.getItem('msw_scenario') || 'default';
+    return (localStorage.getItem('msw_scenario') || 'default') as MockScenario;
   });
 
   useEffect(() => {
@@ -20,7 +21,7 @@ export function MSWIndicator() {
       const localStorageEnabled = localStorage.getItem('msw_enabled') === 'true';
       const envEnabled = process.env.NEXT_PUBLIC_ENABLE_MSW === 'true';
       const enabled = localStorageEnabled || envEnabled;
-      const currentScenario = localStorage.getItem('msw_scenario') || 'default';
+      const currentScenario = (localStorage.getItem('msw_scenario') || 'default') as MockScenario;
 
       setMswEnabled(enabled);
       setScenario(currentScenario);

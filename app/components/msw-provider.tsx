@@ -2,47 +2,59 @@
 
 import type React from 'react';
 import { useEffect, useState } from 'react';
+import { MSW_SCENARIO_HEADER } from '../mocks/types';
 
 export function MSWProvider({ children }: { children: React.ReactNode }) {
   const [mswReady, setMswReady] = useState(false);
-  const [mswEnabled, setMswEnabled] = useState(false);
-
-  useEffect(() => {
-    // Check if MSW is enabled via localStorage OR environment variable
+  const [shouldEnableMSW] = useState(() => {
+    // Check synchronously before mount to avoid race conditions
+    if (typeof window === 'undefined') return false;
     const localStorageEnabled = localStorage.getItem('msw_enabled') === 'true';
     const envEnabled = process.env.NEXT_PUBLIC_ENABLE_MSW === 'true';
-    const shouldEnableMSW = localStorageEnabled || envEnabled;
+    return localStorageEnabled || envEnabled;
+  });
 
-    setMswEnabled(shouldEnableMSW);
+  useEffect(() => {
+    if (!shouldEnableMSW) {
+      setMswReady(true);
+      return;
+    }
 
     const initMSW = async () => {
-      if (shouldEnableMSW) {
-        try {
-          const { worker } = await import('../mocks/browser');
-          await worker.start({
-            onUnhandledRequest: 'bypass',
-          });
+      try {
+        const { worker } = await import('../mocks/browser');
+
+        // Intercept all requests and inject scenario as custom header
+        worker.events.on('request:start', ({ request }) => {
           const scenario = localStorage.getItem('msw_scenario') || 'default';
-          // eslint-disable-next-line no-console
-          console.info('[MSW] Mocking enabled');
-          // eslint-disable-next-line no-console
-          console.info('[MSW] Current scenario:', scenario);
-        } catch (error) {
-          console.error('[MSW] Failed to initialize:', error);
-        }
+          request.headers.set(MSW_SCENARIO_HEADER, scenario);
+        });
+
+        await worker.start({
+          onUnhandledRequest: 'bypass',
+        });
+
+        const scenario = localStorage.getItem('msw_scenario') || 'default';
+        // eslint-disable-next-line no-console
+        console.info('[MSW] Mocking enabled');
+        // eslint-disable-next-line no-console
+        console.info('[MSW] Current scenario:', scenario);
+      } catch (error) {
+        console.error('[MSW] Failed to initialize:', error);
+      } finally {
+        setMswReady(true);
       }
-      setMswReady(true);
     };
 
     initMSW();
-  }, []);
+  }, [shouldEnableMSW]);
 
-  // Show loading state while MSW is initializing (if enabled)
-  if (mswEnabled && !mswReady) {
+  // Block rendering until MSW is ready to avoid race conditions
+  if (!mswReady) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-zd-bg-1">
         <div className="text-center vgap-2">
-          <div className="text-zd-fg-2">Initializing MSW...</div>
+          <div className="text-zd-fg-2">Loading...</div>
         </div>
       </div>
     );

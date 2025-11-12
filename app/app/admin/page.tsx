@@ -1,25 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-
-type Scenario = 'default' | 'empty' | 'single' | 'few' | 'exact-page';
-
-const SCENARIOS: { value: Scenario; label: string; description: string }[] = [
-  { value: 'default', label: 'Default', description: '260 items (production-like)' },
-  { value: 'empty', label: 'Empty', description: '0 items (no results)' },
-  { value: 'single', label: 'Single', description: '1 item' },
-  { value: 'few', label: 'Few', description: '5 items (less than one page)' },
-  { value: 'exact-page', label: 'Exact Page', description: '30 items (one full page)' },
-];
+import { type MockScenario, MOCK_SCENARIOS } from '../../mocks/types';
 
 export default function AdminPage() {
   const [mswEnabled, setMswEnabled] = useState(() => {
     if (typeof window === 'undefined') return false;
     return localStorage.getItem('msw_enabled') === 'true';
   });
-  const [scenario, setScenario] = useState<Scenario>(() => {
+  const [scenario, setScenario] = useState<MockScenario>(() => {
     if (typeof window === 'undefined') return 'default';
-    return (localStorage.getItem('msw_scenario') || 'default') as Scenario;
+    return (localStorage.getItem('msw_scenario') || 'default') as MockScenario;
   });
 
   const handleToggleMSW = () => {
@@ -31,7 +22,7 @@ export default function AdminPage() {
     window.location.reload();
   };
 
-  const handleScenarioChange = (newScenario: Scenario) => {
+  const handleScenarioChange = (newScenario: MockScenario) => {
     setScenario(newScenario);
     localStorage.setItem('msw_scenario', newScenario);
 
@@ -120,7 +111,7 @@ export default function AdminPage() {
             </div>
 
             <div className="vgap-3">
-              {SCENARIOS.map((s) => (
+              {MOCK_SCENARIOS.map((s) => (
                 <label
                   key={s.value}
                   className={`flex items-start hgap-3 p-4 rounded-lg border-2 cursor-pointer transition-colors ${
