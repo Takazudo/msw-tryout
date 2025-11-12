@@ -13,10 +13,12 @@ permissions:
 
 jobs:
   post-deploy-status:
-    # Only run for Netlify deployments
+    # Only run for Netlify deployments (production, deploy-preview, branch-deploy)
     if: |
       github.event_name == 'deployment_status' &&
-      github.event.deployment_status.environment == 'netlify'
+      (github.event.deployment_status.environment == 'production' ||
+       github.event.deployment_status.environment == 'deploy-preview' ||
+       github.event.deployment_status.environment == 'branch-deploy')
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -78,17 +80,22 @@ jobs:
           script: |
             const commit = '${{ steps.deploy-info.outputs.commit_ref }}';
 
-            // Search for PR associated with this commit
-            const { data: prs } = await github.rest.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open'
-            });
+            // Use GitHub's API to find PRs associated with this commit directly
+            // This is more reliable than listing all PRs and avoids pagination issues
+            try {
+              const { data: prs } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                commit_sha: commit
+              });
 
-            for (const pr of prs) {
-              if (pr.head.sha === commit) {
-                return pr.number;
+              // Find the first open PR
+              const openPr = prs.find(pr => pr.state === 'open');
+              if (openPr) {
+                return openPr.number;
               }
+            } catch (error) {
+              console.log(`Error finding PR for commit ${commit}:`, error.message);
             }
 
             return null;
