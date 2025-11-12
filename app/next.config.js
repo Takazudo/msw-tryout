@@ -6,8 +6,10 @@ const __dirname = dirname(__filename);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
   outputFileTracingRoot: join(__dirname, '../'),
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
