@@ -92,7 +92,11 @@ jobs:
         run: cd app && pnpm run serve &
 
       - name: Start Netlify dev server
-        run: pnpm exec netlify dev --cwd . &
+        run: |
+          # Create .netlify directory to avoid project detection issues
+          mkdir -p .netlify
+          echo '{}' > .netlify/state.json
+          pnpm exec netlify dev --offline &
 
       - name: Wait for servers to be ready
         run: |
