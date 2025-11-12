@@ -10,7 +10,7 @@
   autoLaunch = false
   framework = "#custom"
   command = "tail -f /dev/null"
-  targetPort = 3000
+  targetPort = 3200
 
 [[redirects]]
   from = "/api/*"

@@ -1,0 +1,380 @@
+openapi: 3.0.3
+info:
+  title: MSW Tryout Gallery API
+  description: |
+    Gallery API for MSW (Mock Service Worker) tryout project.
+
+    ## Overview
+
+    This API provides gallery image data with pagination and blurhash placeholder support.
+    The gallery showcases Takazudo Modular Panels project images hosted externally.
+
+    ## Features
+
+    - Paginated gallery listing (default 30 items per page)
+    - Individual item retrieval by slug
+    - Blurhash placeholders for progressive image loading
+    - CORS enabled for all endpoints
+
+    ## External Resources
+
+    All images are hosted at takazudomodular.com with two size variants:
+    - Thumbnail: 400px width
+    - Enlarged: 1200px width
+  version: 1.0.0
+  contact:
+    name: MSW Tryout Support
+    url: https://github.com/takazudo/msw-tryout
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:8888
+    description: Local development server (via Netlify Dev with /api prefix)
+  - url: https://your-site.netlify.app
+    description: Production server (Netlify)
+
+tags:
+  - name: 🖼️ Gallery
+    description: Gallery endpoints for browsing and retrieving image data
+
+paths:
+  /api/gallery:
+    get:
+      tags:
+        - 🖼️ Gallery
+      summary: List gallery items with pagination
+      description: |
+        Retrieves a paginated list of gallery items.
+
+        ## Pagination
+
+        - Default page size: 30 items
+        - Page numbers are 1-based
+        - Total of 260 items available
+
+        ## Response Format
+
+        Each gallery item includes:
+        - `slug`: Unique identifier for the item
+        - `imageAlt`: Alt text for accessibility (currently empty)
+        - `blurhash`: Blurhash string for placeholder generation
+        - `thumbnailUrl`: Full URL to 400px thumbnail image
+        - `enlargedUrl`: Full URL to 1200px full-size image
+
+        ## Blurhash Integration
+
+        The `blurhash` field can be used with the [blurhash algorithm](https://blurha.sh/)
+        to generate a placeholder image while the actual image loads. This provides a smooth
+        user experience with perceived performance improvements.
+
+        ## Frontend Usage
+
+        ```javascript
+        // Fetch first page of gallery
+        const response = await fetch('/api/gallery?page=1&limit=30');
+        const data = await response.json();
+
+        console.log(data.items);         // Array of gallery items
+        console.log(data.pagination);    // Pagination metadata
+        ```
+      operationId: listGalleryItems
+      parameters:
+        - name: page
+          in: query
+          description: Page number (1-based)
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          example: 1
+        - name: limit
+          in: query
+          description: Number of items per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 30
+          example: 30
+      responses:
+        '200':
+          description: Successfully retrieved gallery items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GalleryListResponse'
+              example:
+                items:
+                  - slug: "panels-gallery-zudo-blocks-141"
+                    imageAlt: ""
+                    blurhash: "UFFNxM^d=D~9:kJ.o~EMnAnTIWNf%L=Z-6b^"
+                    thumbnailUrl: "https://panels.takazudomodular.com/img/g/panels-gallery-zudo-blocks-141.jpg?nf_resize=fit&w=400"
+                    enlargedUrl: "https://panels.takazudomodular.com/img/g/panels-gallery-zudo-blocks-141.jpg?nf_resize=fit&w=1200"
+                  - slug: "panels-gallery-zudo-blocks-142"
+                    imageAlt: ""
+                    blurhash: "UXHJs+ae^3$%niS#xFfi}AbHW;o0%1R*n%oe"
+                    thumbnailUrl: "https://panels.takazudomodular.com/img/g/panels-gallery-zudo-blocks-142.jpg?nf_resize=fit&w=400"
+                    enlargedUrl: "https://panels.takazudomodular.com/img/g/panels-gallery-zudo-blocks-142.jpg?nf_resize=fit&w=1200"
+                pagination:
+                  currentPage: 1
+                  totalPages: 9
+                  totalItems: 260
+                  itemsPerPage: 30
+                  hasNextPage: true
+                  hasPreviousPage: false
+        '400':
+          description: Invalid pagination parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Invalid pagination parameters"
+        '405':
+          description: Method not allowed (only GET is supported)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Method not allowed"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Internal server error"
+
+    options:
+      tags:
+        - 🖼️ Gallery
+      summary: CORS preflight for gallery list
+      description: Handles CORS preflight requests
+      operationId: galleryListOptions
+      responses:
+        '200':
+          description: CORS preflight successful
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: "*"
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+                example: "GET, OPTIONS"
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+                example: "Content-Type"
+
+  /api/gallery-item:
+    get:
+      tags:
+        - 🖼️ Gallery
+      summary: Get gallery item by slug
+      description: |
+        Retrieves a single gallery item by its slug identifier.
+
+        ## Usage
+
+        This endpoint is useful for:
+        - Direct access to a specific gallery item
+        - Sharing links to individual items
+        - Loading item details for modal/dialog views
+
+        ## Frontend Usage
+
+        ```javascript
+        // Fetch specific gallery item
+        const slug = 'panels-gallery-zudo-blocks-141';
+        const response = await fetch(`/api/gallery-item?slug=${slug}`);
+        const item = await response.json();
+
+        console.log(item.slug);          // "panels-gallery-zudo-blocks-141"
+        console.log(item.blurhash);      // Blurhash string
+        console.log(item.thumbnailUrl);  // Thumbnail image URL
+        console.log(item.enlargedUrl);   // Full-size image URL
+        ```
+      operationId: getGalleryItemBySlug
+      parameters:
+        - name: slug
+          in: query
+          required: true
+          description: Gallery item slug identifier
+          schema:
+            type: string
+          example: "panels-gallery-zudo-blocks-141"
+      responses:
+        '200':
+          description: Successfully retrieved gallery item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GalleryItem'
+              example:
+                slug: "panels-gallery-zudo-blocks-141"
+                imageAlt: ""
+                blurhash: "UFFNxM^d=D~9:kJ.o~EMnAnTIWNf%L=Z-6b^"
+                thumbnailUrl: "https://panels.takazudomodular.com/img/g/panels-gallery-zudo-blocks-141.jpg?nf_resize=fit&w=400"
+                enlargedUrl: "https://panels.takazudomodular.com/img/g/panels-gallery-zudo-blocks-141.jpg?nf_resize=fit&w=1200"
+        '400':
+          description: Missing slug parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Slug parameter is required"
+        '404':
+          description: Gallery item not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Gallery item not found"
+        '405':
+          description: Method not allowed (only GET is supported)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Method not allowed"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Internal server error"
+
+    options:
+      tags:
+        - 🖼️ Gallery
+      summary: CORS preflight for gallery item
+      description: Handles CORS preflight requests
+      operationId: galleryItemOptions
+      responses:
+        '200':
+          description: CORS preflight successful
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: "*"
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+                example: "GET, OPTIONS"
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+                example: "Content-Type"
+
+components:
+  schemas:
+    GalleryItem:
+      type: object
+      required:
+        - slug
+        - imageAlt
+        - blurhash
+        - thumbnailUrl
+        - enlargedUrl
+      properties:
+        slug:
+          type: string
+          description: Unique identifier for the gallery item
+          example: "panels-gallery-zudo-blocks-141"
+        imageAlt:
+          type: string
+          description: Alt text for accessibility (currently empty for all items)
+          example: ""
+        blurhash:
+          type: string
+          description: |
+            Blurhash string for generating placeholder image.
+            Blurhash is a compact representation of a placeholder for an image.
+            See https://blurha.sh/ for more information.
+          pattern: '^[A-Za-z0-9#$%*+,-.:;=?@\[\]^_{|}~]+$'
+          example: "UFFNxM^d=D~9:kJ.o~EMnAnTIWNf%L=Z-6b^"
+        thumbnailUrl:
+          type: string
+          format: uri
+          description: Full URL to thumbnail image (400px width)
+          example: "https://panels.takazudomodular.com/img/g/panels-gallery-zudo-blocks-141.jpg?nf_resize=fit&w=400"
+        enlargedUrl:
+          type: string
+          format: uri
+          description: Full URL to full-size image (1200px width)
+          example: "https://panels.takazudomodular.com/img/g/panels-gallery-zudo-blocks-141.jpg?nf_resize=fit&w=1200"
+
+    GalleryListResponse:
+      type: object
+      required:
+        - items
+        - pagination
+      properties:
+        items:
+          type: array
+          description: Array of gallery items for the current page
+          items:
+            $ref: '#/components/schemas/GalleryItem'
+        pagination:
+          $ref: '#/components/schemas/PaginationMetadata'
+
+    PaginationMetadata:
+      type: object
+      required:
+        - currentPage
+        - totalPages
+        - totalItems
+        - itemsPerPage
+        - hasNextPage
+        - hasPreviousPage
+      properties:
+        currentPage:
+          type: integer
+          description: Current page number (1-based)
+          minimum: 1
+          example: 1
+        totalPages:
+          type: integer
+          description: Total number of pages
+          minimum: 1
+          example: 9
+        totalItems:
+          type: integer
+          description: Total number of items in the gallery
+          minimum: 0
+          example: 260
+        itemsPerPage:
+          type: integer
+          description: Number of items per page
+          minimum: 1
+          example: 30
+        hasNextPage:
+          type: boolean
+          description: Whether there is a next page available
+          example: true
+        hasPreviousPage:
+          type: boolean
+          description: Whether there is a previous page available
+          example: false
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Error message describing what went wrong
+          example: "Invalid pagination parameters"
