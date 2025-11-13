@@ -163,6 +163,12 @@ https://panels.takazudomodular.com/gallery
 The image organization and structure follows the documentation at:
 `~/repos/personal/case-estimate/doc/docs/inbox/image-organization.md`
 
+## Deployment
+
+This project is deployed on Netlify:
+- **Production**: https://msw-test.netlify.app
+- **Documentation**: See `/doc` directory for comprehensive guides
+
 ## Troubleshooting
 
 ### Port Conflicts
