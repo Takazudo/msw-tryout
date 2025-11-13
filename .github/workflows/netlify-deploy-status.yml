@@ -1,9 +1,8 @@
 name: Netlify Deploy Status
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-  # Triggered by deployment_status from Netlify
+  # Only trigger on deployment_status events from Netlify
+  # This prevents the workflow from running on direct pushes to main
   deployment_status:
 
 permissions:
