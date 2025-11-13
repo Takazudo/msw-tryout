@@ -39,13 +39,13 @@ export function MSWIndicator() {
   return (
     <Link
       href="/admin"
-      className="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-green-600 transition-colors flex items-center hgap-2 z-50"
+      className="fixed bottom-hgap-xs right-hgap-xs bg-zd-notify text-zd-white px-hgap-xs py-vgap-xs rounded-lg shadow-lg hover:bg-zd-notify/80 transition-colors flex items-center gap-hgap-2xs z-50"
       aria-label="MSW Admin Settings"
     >
-      <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
-      <div className="vgap-0">
+      <div className="w-vgap-xs h-vgap-xs bg-zd-white rounded-full animate-pulse" />
+      <div className="flex flex-col gap-0">
         <div className="text-xs font-semibold">MSW Active</div>
-        <div className="text-[10px] opacity-90">{scenario}</div>
+        <div className="text-xs opacity-90">{scenario}</div>
       </div>
     </Link>
   );
