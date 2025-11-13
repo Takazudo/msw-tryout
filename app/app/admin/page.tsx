@@ -65,7 +65,7 @@ export default function AdminPage() {
         >
           <div className="flex items-center gap-hgap-2xs">
             <div
-              className={`w-hgap-xs h-hgap-xs rounded-full ${mswEnabled ? 'bg-zd-notify animate-pulse' : 'bg-zd-gray'}`}
+              className={`w-[12px] h-[12px] rounded-full ${mswEnabled ? 'bg-zd-notify animate-pulse' : 'bg-zd-gray'}`}
             />
             <span className="font-semibold text-zd-white">
               MSW Status: {mswEnabled ? 'ENABLED' : 'DISABLED'}

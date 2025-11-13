@@ -174,7 +174,7 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
           className="fixed top-hgap-sm right-hgap-sm z-[100] p-hgap-xs text-zd-white hover:text-zd-gray transition-colors bg-zd-black/70 rounded-sm backdrop-blur"
           aria-label="Close dialog"
         >
-          <CloseIcon className="w-hgap-md h-hgap-md" />
+          <CloseIcon className="w-[32px] h-[32px]" />
         </button>
 
         {/* Navigation buttons */}
@@ -185,7 +185,7 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
             className="fixed left-hgap-sm top-[50vh] z-[100] -translate-y-1/2 rounded-full text-zd-white backdrop-blur transition-colors hover:bg-zd-white/30 bg-zd-black/70 p-hgap-sm"
             aria-label="Previous image"
           >
-            <ChevronLeftIcon className="h-hgap-lg w-hgap-lg" />
+            <ChevronLeftIcon className="h-[48px] w-[48px]" />
           </button>
         )}
 
@@ -196,7 +196,7 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
             className="fixed right-hgap-sm top-[50vh] z-[100] -translate-y-1/2 rounded-full text-zd-white backdrop-blur transition-colors hover:bg-zd-white/30 bg-zd-black/70 p-hgap-sm"
             aria-label="Next image"
           >
-            <ChevronRightIcon className="h-hgap-lg w-hgap-lg" />
+            <ChevronRightIcon className="h-[48px] w-[48px]" />
           </button>
         )}
 
