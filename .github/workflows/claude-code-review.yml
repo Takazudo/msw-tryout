@@ -1,14 +1,10 @@
 name: Claude Code Review
 
 on:
-  pull_request:
-    types: [opened, synchronize]
-    # Optional: Only run on specific file changes
-    # paths:
-    #   - "src/**/*.ts"
-    #   - "src/**/*.tsx"
-    #   - "src/**/*.js"
-    #   - "src/**/*.jsx"
+  # Only run when @claude is mentioned in PR comments
+  # Use /ai-pr-review slash command to trigger reviews
+  # This workflow is intentionally NOT triggered on pull_request events
+  workflow_dispatch:
 
 jobs:
   claude-review:
