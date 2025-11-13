@@ -58,6 +58,26 @@ If this value will be reused or is semantically meaningful:
 <div className="max-w-[400px] bg-[#custom-color]">
 ```
 
+**⚠️ IMPORTANT: Icon Sizes REQUIRE Arbitrary Values**
+
+The design system does NOT define width/height tokens for pixel-based dimensions. For icon sizes, you MUST use arbitrary values:
+
+```tsx
+// ✅ CORRECT - Icons require arbitrary values
+<CloseIcon className="w-[32px] h-[32px]" />
+<ChevronLeftIcon className="w-[48px] h-[48px]" />
+<div className="w-[8px] h-[8px] rounded-full" /> {/* Status indicator dot */}
+
+// ❌ WRONG - These tokens don't exist
+<CloseIcon className="w-hgap-xs h-hgap-xs" />    // Build error!
+<CloseIcon className="w-vgap-sm h-vgap-sm" />    // Build error!
+```
+
+**Why?** The design system only defines:
+- Spacing tokens (hgap-\*, vgap-\*) for margins, padding, gaps, positioning
+- Fractional width tokens (w-1/2, w-1/3, w-full)
+- NO width-hgap-\* or height-vgap-\* tokens exist
+
 ### When to Use Each Approach
 
 **Use design tokens when:**
@@ -68,6 +88,7 @@ If this value will be reused or is semantically meaningful:
 
 **Use arbitrary values when:**
 
+- **Icon sizes and pixel-based dimensions (REQUIRED)**
 - The value is unique to one specific component
 - The value is mathematically calculated or component-specific
 - Adding a token would create unnecessary abstraction
@@ -267,6 +288,76 @@ When the design requires a specific value that doesn't match the vgap/hgap scale
 <section className="mt-vgap-lg mb-vgap-xl">
 ```
 
+## Width and Height Tokens
+
+### ⚠️ CRITICAL: Limited Width/Height Support
+
+The design system has **limited support** for width and height utilities:
+
+#### Available Width Tokens
+
+```css
+/* Only these width tokens are defined */
+--width-full: 100%;
+
+/* Fractional widths */
+--width-1/2: 50%;
+--width-1/3: 33.333333%;
+--width-2/3: 66.666667%;
+--width-1/4: 25%;
+--width-3/4: 75%;
+/* etc. */
+```
+
+#### NO Height Tokens for Pixel Values
+
+```css
+/* ❌ These DO NOT EXIST in the design system */
+--height-hgap-xs: /* Does not exist */
+--height-vgap-md: /* Does not exist */
+--width-hgap-sm:  /* Does not exist */
+```
+
+### Usage Guidelines
+
+#### ✅ DO: Use fractional widths
+
+```tsx
+<div className="w-full">       {/* 100% width */}
+<div className="w-1/2">        {/* 50% width */}
+<div className="w-1/3">        {/* 33.33% width */}
+```
+
+#### ✅ DO: Use arbitrary values for pixel-based dimensions
+
+```tsx
+// Icons
+<CloseIcon className="w-[32px] h-[32px]" />
+<ChevronIcon className="w-[48px] h-[48px]" />
+
+// Status indicators
+<div className="w-[8px] h-[8px] rounded-full bg-zd-notify" />
+
+// Custom widths
+<div className="w-[400px] h-[200px]">
+```
+
+#### ❌ DON'T: Try to use spacing tokens for width/height
+
+```tsx
+// ❌ WRONG - These tokens don't exist (build error)
+<div className="w-hgap-md h-vgap-lg">
+<img className="w-vgap-sm h-vgap-sm">
+```
+
+**Why?** Spacing tokens (hgap-\*, vgap-\*) are ONLY for:
+- Margins (`m-*`, `mx-*`, `my-*`)
+- Padding (`p-*`, `px-*`, `py-*`)
+- Gaps (`gap-*`, `gap-x-*`, `gap-y-*`)
+- Positioning (`top-*`, `left-*`, `inset-*`)
+
+They do NOT work for width or height properties.
+
 ## Color System
 
 The Zudo Design System includes a custom color palette defined as CSS variables:
@@ -461,11 +552,13 @@ Due to wildcard resets in the `@theme` block, the following Tailwind default uti
 
 ### Spacing
 
-- `h-1` through `h-96` - Use `h-hgap-*` or `h-vgap-*` instead
-- `w-1` through `w-96` - Use `w-hgap-*` instead
+- `h-1` through `h-96` - Use arbitrary values `h-[Npx]` (no height tokens exist)
+- `w-1` through `w-96` - Use `w-full`, `w-1/2`, etc. or arbitrary values `w-[Npx]`
 - `p-1`, `px-4`, `py-8`, etc. - Use `p-hgap-*` or `p-vgap-*` instead
 - `m-1`, `mx-4`, `my-8`, etc. - Use `m-hgap-*` or `m-vgap-*` instead
 - `gap-1`, `gap-x-4`, `gap-y-8`, etc. - Use `gap-hgap-*` or `gap-vgap-*` instead
+
+**Note:** The design system does NOT define `w-hgap-*`, `h-hgap-*`, `w-vgap-*`, or `h-vgap-*` tokens. For pixel-based widths/heights (especially icons), use arbitrary values.
 
 ### Colors
 
