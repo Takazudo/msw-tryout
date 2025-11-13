@@ -171,7 +171,7 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
         <button
           data-testid="gallery-dialog-close"
           onClick={handleClose}
-          className="fixed top-hgap-sm right-hgap-sm z-[100] p-hgap-xs text-white hover:text-zd-gray transition-colors bg-zd-black/70 rounded-sm backdrop-blur"
+          className="fixed top-hgap-sm right-hgap-sm z-[100] p-hgap-xs text-zd-white hover:text-zd-gray transition-colors bg-zd-black/70 rounded-sm backdrop-blur"
           aria-label="Close dialog"
         >
           <CloseIcon className="w-[32px] h-[32px]" />
@@ -182,7 +182,7 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
           <button
             data-testid="gallery-dialog-prev"
             onClick={handlePrevious}
-            className="fixed left-hgap-sm top-[50vh] z-[100] -translate-y-1/2 rounded-full text-white backdrop-blur transition-colors hover:bg-zd-white/30 bg-zd-black/70 p-hgap-sm"
+            className="fixed left-hgap-sm top-[50vh] z-[100] -translate-y-1/2 rounded-full text-zd-white backdrop-blur transition-colors hover:bg-zd-white/30 bg-zd-black/70 p-hgap-sm"
             aria-label="Previous image"
           >
             <ChevronLeftIcon className="h-[48px] w-[48px]" />
@@ -193,7 +193,7 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
           <button
             data-testid="gallery-dialog-next"
             onClick={handleNext}
-            className="fixed right-hgap-sm top-[50vh] z-[100] -translate-y-1/2 rounded-full text-white backdrop-blur transition-colors hover:bg-zd-white/30 bg-zd-black/70 p-hgap-sm"
+            className="fixed right-hgap-sm top-[50vh] z-[100] -translate-y-1/2 rounded-full text-zd-white backdrop-blur transition-colors hover:bg-zd-white/30 bg-zd-black/70 p-hgap-sm"
             aria-label="Next image"
           >
             <ChevronRightIcon className="h-[48px] w-[48px]" />
@@ -253,14 +253,14 @@ export default function GalleryDialog({ items, currentSlug }: GalleryDialogProps
         <div className="w-full lg:w-[400px] bg-zd-black border-t lg:border-t-0 lg:border-l border-zd-gray/20 flex flex-col max-h-[40vh] lg:max-h-none">
           {/* User info header */}
           <div className="p-hgap-md border-b border-zd-gray/20">
-            <span className="text-white font-semibold">{currentItem.user}</span>
+            <span className="text-zd-white font-semibold">{currentItem.user}</span>
           </div>
 
           {/* Scrollable content area */}
           <div className="flex-1 overflow-y-auto p-hgap-md">
             {/* Description */}
             <div className="mb-vgap-md">
-              <p className="text-white">{currentItem.description}</p>
+              <p className="text-zd-white">{currentItem.description}</p>
             </div>
 
             {/* Hashtags */}
