@@ -74,20 +74,15 @@ jobs:
       - name: Install Playwright browsers
         run: cd app && pnpm exec playwright install --with-deps chromium
 
-      - name: Start Next.js dev server
-        run: cd app && pnpm run dev &
-
-      - name: Start Netlify dev server
-        run: pnpm run dev &
-
-      - name: Wait for servers to be ready
-        run: |
-          echo "Waiting for Netlify dev server..."
-          timeout 60 bash -c 'until curl -s http://localhost:8888 > /dev/null; do sleep 2; done' || exit 1
-          echo "Server is ready!"
+      - name: Build application for testing
+        run: cd app && pnpm run build
+        env:
+          NODE_ENV: production
 
       - name: Run smoke tests
         run: cd app && pnpm run test:smoke
+        env:
+          CI: true
 
       - name: Upload test results
         if: failure()
