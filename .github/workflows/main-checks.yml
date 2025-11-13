@@ -79,7 +79,12 @@ jobs:
         env:
           NODE_ENV: production
 
-      - name: Run smoke tests
+      - name: Run e2e tests with MSW
+        run: cd app && pnpm run test:e2e:msw
+        env:
+          CI: true
+
+      - name: Run smoke tests against real API
         run: cd app && pnpm run test:smoke
         env:
           CI: true
