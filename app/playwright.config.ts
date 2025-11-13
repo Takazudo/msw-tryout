@@ -56,15 +56,17 @@ export default defineConfig({
         },
         {
           command: 'cd .. && ./scripts/ci-netlify-dev.sh',
-          url: 'http://localhost:8888',
+          // Check actual API endpoint, not just that Netlify is listening
+          // This ensures Edge Functions are fully initialized before tests start
+          url: 'http://localhost:8888/api/gallery?page=1&limit=1',
           reuseExistingServer: false,
-          timeout: 120 * 1000,
+          timeout: 180 * 1000, // Increased to 3 minutes for Edge Functions setup
         },
       ]
     : {
         command: 'cd .. && pnpm run dev:api',
-        url: 'http://localhost:8888',
+        url: 'http://localhost:8888/api/gallery?page=1&limit=1',
         reuseExistingServer: true,
-        timeout: 120 * 1000,
+        timeout: 180 * 1000,
       },
 });
