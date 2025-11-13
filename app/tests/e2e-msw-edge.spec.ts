@@ -119,7 +119,8 @@ test.describe('Gallery with MSW - Edge Cases', () => {
     });
 
     // Navigate directly to a URL with slug parameter
-    await page.goto('/?id=mock-panels-gallery-1');
+    // Using the first real image number (141) with proper zero-padding
+    await page.goto('/?id=panels-gallery-zudo-blocks-141');
     await page.waitForLoadState('networkidle');
 
     // Dialog should open automatically
