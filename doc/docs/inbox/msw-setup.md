@@ -295,6 +295,26 @@ This allows per-browser customization even when the env var is set.
 
 **Solution**: Run `pnpm exec msw init public/` to regenerate the service worker file
 
+### Issue: CSP (Content Security Policy) blocks MSW in production
+
+**Symptom**: Console shows errors like:
+```
+Connecting to '<URL>' violates the following Content Security Policy directive: "connect-src 'self'"
+```
+
+**Root Cause**: MSW service workers require `blob:` URLs to function, and need access to external resources.
+
+**Solution**: Update your CSP `connect-src` directive to include:
+- `blob:` - Required for service worker initialization
+- External domains your app needs to fetch from (e.g., `https://takazudomodular.com`)
+
+Example in `netlify.toml`:
+```toml
+Content-Security-Policy = "... connect-src 'self' blob: https://takazudomodular.com ..."
+```
+
+**Reference**: See [MSW CSP Documentation](https://mswjs.io/docs/migrations/1.x-to-2.x#cannot-setup-a-service-worker) and GitHub issue #26
+
 ## References
 
 - [MSW Documentation](https://mswjs.io/)
