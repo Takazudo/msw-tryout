@@ -3807,16 +3807,25 @@ export const galleryData = [
 
 /**
  * Get thumbnail URL for a given slug
+ * Extracts the image number from slug (e.g., "panels-gallery-zudo-blocks-141" → "141")
+ * and constructs the correct image URL
  */
 export function getThumbnailUrl(slug) {
-  return `https://takazudomodular.com/static/images/p/${slug}/600w.webp`;
+  // Extract the number from the end of the slug (e.g., "panels-gallery-zudo-blocks-141" → "141")
+  const match = slug.match(/-(\d+)$/);
+  const imageNumber = match ? match[1] : '1';
+  return `https://takazudomodular.com/img/panels/thumbnail/panels-gallery-zudo-blocks-${imageNumber}.webp`;
 }
 
 /**
  * Get enlarged image URL for a given slug
+ * Extracts the image number from slug and constructs the correct image URL
  */
 export function getEnlargedImageUrl(slug) {
-  return `https://takazudomodular.com/static/images/p/${slug}/1600w.webp`;
+  // Extract the number from the end of the slug
+  const match = slug.match(/-(\d+)$/);
+  const imageNumber = match ? match[1] : '1';
+  return `https://takazudomodular.com/img/panels/enlarged/panels-gallery-zudo-blocks-${imageNumber}.webp`;
 }
 
 /**
