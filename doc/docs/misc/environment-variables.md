@@ -189,4 +189,4 @@ pnpm run init-worktree <worktree-name>
 
 - [Netlify API Documentation](https://docs.netlify.com/api/get-started/)
 - [GitHub Actions Secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets)
-- [Git Worktrees Setup](../../scripts/README.md)
+- [Git Worktrees Setup](https://github.com/Takazudo/msw-tryout/blob/main/scripts/README.md)
