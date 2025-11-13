@@ -41,7 +41,8 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     # Content Security Policy for XSS protection (modern replacement for X-XSS-Protection)
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://takazudomodular.com; font-src 'self' data:; connect-src 'self'"
+    # Note: blob: is required for MSW (Mock Service Worker) to function properly
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://takazudomodular.com; font-src 'self' data:; connect-src 'self' blob: https://takazudomodular.com"
 
 # Redirects for clean API paths
 [[redirects]]
